@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>carte pratique</title>
+    <title>carte choisirgeoportail</title>
     <meta charset="UTF-8">
 <!-- meta nécessaire pour le mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -22,18 +22,35 @@ var wmtsurl = 'https://wxs.ign.fr/choisirgeoportail/geoportail/wmts?'
 var attrIGN = "&copy; <a href='http://www.ign.fr'>IGN</a>";
 
 var baseLayers = {
-  "Maps" : new L.TileLayer(
+  "Cartes IGN" : new L.TileLayer(
       wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS&format=image/jpeg&style=normal',
+      {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
+  ),
+  "ScanExpress" : new L.TileLayer(
+      wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD&format=image/jpeg&style=normal',
       {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
   ),
   "PlanIgn" : new L.TileLayer(
       wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGN&format=image/jpeg&style=normal',
       {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
   ),
+  "Plan IGN j+1" : new L.TileLayer(
+      wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1&format=image/jpeg&style=normal',
+      {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
+  ),
   "Ortho-Photos" : new L.TileLayer(
       wmtsurl + '&layer=ORTHOIMAGERY.ORTHOPHOTOS&format=image/jpeg&style=normal',
       {"format":"image/jpeg","minZoom":0,"maxZoom":20,"attribution":attrIGN}
-  )
+  ),
+  "Parcelles cadastrales (orange)" : new L.TileLayer(
+      wmtsurl + '&layer=CADASTRALPARCELS.PARCELS&format=image/png&style=bdparcellaire_o',
+      {"format":"image/png","minZoom":0,"maxZoom":20,"attribution":attrIGN}
+  ),
+  "Altitude" : new L.TileLayer(
+      wmtsurl + '&layer=ELEVATION.SLOPES&format=image/jpeg&style=normal',
+      {"format":"image/jpeg","minZoom":6,"maxZoom":14,"attribution":attrIGN}
+  ),
+  
 };
 
 map.addLayer(baseLayers["Maps"]);
