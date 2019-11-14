@@ -34,10 +34,6 @@ var baseLayers = {
       wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGN&format=image/jpeg&style=normal',
       {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
   ),
-  "Plan IGN j+1" : new L.TileLayer(
-      wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1&format=image/png&style=normal',
-      {"format":"image/png","minZoom":0,"maxZoom":18,"attribution":attrIGN}
-  ),
   "Ortho-Photos" : new L.TileLayer(
       wmtsurl + '&layer=ORTHOIMAGERY.ORTHOPHOTOS&format=image/jpeg&style=normal',
       {"format":"image/jpeg","minZoom":0,"maxZoom":20,"attribution":attrIGN}
@@ -52,9 +48,16 @@ var baseLayers = {
   )
 };
 
+var overlays = {
+  "BD Uni j+1" : new L.TileLayer(
+      wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1&format=image/png&style=normal',
+      {"format":"image/png","minZoom":0,"maxZoom":18,"attribution":attrIGN}
+  ),
+};
+      
 map.addLayer(baseLayers["Cartes IGN"]);
 
-L.control.layers(baseLayers).addTo(map);
+L.control.layers(baseLayers, overlays).addTo(map);
 
       </script>
     </body>
