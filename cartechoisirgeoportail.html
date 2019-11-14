@@ -49,8 +49,7 @@ var baseLayers = {
   "Altitude" : new L.TileLayer(
       wmtsurl + '&layer=ELEVATION.SLOPES&format=image/jpeg&style=normal',
       {"format":"image/jpeg","minZoom":6,"maxZoom":14,"attribution":attrIGN}
-  ),
-  
+  )
 };
 
 map.addLayer(baseLayers["Cartes IGN"]);
