@@ -30,8 +30,12 @@ var baseLayers = {
       wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD&format=image/jpeg&style=normal',
       {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
   ),
-  "PlanIgn" : new L.TileLayer(
+  "Plan IGN" : new L.TileLayer(
       wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGN&format=image/jpeg&style=normal',
+      {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
+  ),
+  "Plan IGN V2" : new L.TileLayer(
+      wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&format=image/jpeg&style=normal',
       {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
   ),
   "Ortho-Photos" : new L.TileLayer(
