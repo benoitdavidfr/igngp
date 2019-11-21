@@ -6,6 +6,7 @@
   * [carte simple utilisant la clé choisirgeoportail (cartechoisirgeoportail.html)](https://benoitdavidfr.github.io/igngp/cartechoisirgeoportail.html)
   * [carte avec des couches WMS exogènes au Géoportail: exemple de la base des espaces protégées gérée par la MNHN/INPN (carte-inpn.html)](https://benoitdavidfr.github.io/igngp/carte-inpn.html)
   * [carte simple avec localisation](https://www.gexplor.fr/carte.html)
+  * [carte OSM + IGN](https://benoitdavidfr.github.io/igngp/carte-osmign.html)
 
 ## Références
 
