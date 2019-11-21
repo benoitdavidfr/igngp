@@ -49,6 +49,10 @@ var baseLayers = {
   "BlueMarble" : new L.TileLayer(
     'https://demo.boundlessgeo.com/geoserver/gwc/service/tms/1.0.0/nasa:bluemarble@EPSG:900913@jpg/{z}/{x}/{y}.jpg',
     {tms: true}
+  ),
+  "OSM" : new L.TileLayer(
+    'https://osm.geobretagne.fr/gwc01/service/tms/1.0.0/{z}/{x}/{y}.jpg',
+    {tms: true}
   )
 };
 
