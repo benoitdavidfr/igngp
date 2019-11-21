@@ -42,18 +42,15 @@ var baseLayers = {
       wmtsurl + '&layer=ORTHOIMAGERY.ORTHOPHOTOS&format=image/jpeg&style=normal',
       {"format":"image/jpeg","minZoom":0,"maxZoom":20,"attribution":attrIGN}
   ),
-  "NE" : new L.TileLayer(
-    'https://demo.boundlessgeo.com/geoserver/gwc/service/tms/1.0.0/ne:ne@EPSG:900913@png/{z}/{x}/{y}.png',
-    {tms: true}
-  ),
-  "BlueMarble" : new L.TileLayer(
-    'https://demo.boundlessgeo.com/geoserver/gwc/service/tms/1.0.0/nasa:bluemarble@EPSG:900913@jpg/{z}/{x}/{y}.jpg',
-    {tms: true}
-  ),
   "OSM" : new L.TileLayer(
     'https://osm.geobretagne.fr/gwc01/service/tms/1.0.0/{z}/{x}/{y}.jpg',
     {tms: true}
   )
+  "OSM2" : new L.TileLayer(
+    'https://osm.geobretagne.fr/gwc01/service/tms/1.0.0//osm%3Amap@EPSG%3A3857@png{z}/{x}/{y}.jpg',
+    {tms: true}
+  )
+  
 };
 
 map.addLayer(baseLayers["Cartes IGN"]);
