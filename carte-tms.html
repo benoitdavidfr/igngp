@@ -22,21 +22,21 @@ var wmtsurl = 'https://wxs.ign.fr/choisirgeoportail/geoportail/wmts?'
 var attrIGN = "&copy; <a href='http://www.ign.fr'>IGN</a>";
 
 var baseLayers = {
+  "OSM" : new L.TileLayer(
+    'https://osm.geobretagne.fr/gwc01/service/tms/1.0.0/osm%3Amap@EPSG%3A3857@png/{z}/{x}/{y}.png',
+    {tms: true,"attribution":"&copy; <a href='https://www.openstreetmap.org/copyright'>les contributeurs d’OpenStreetMap</a>"}
+  ),
   "Plan IGN V2" : new L.TileLayer(
       wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&format=image/png&style=normal',
       {"format":"image/png","minZoom":0,"maxZoom":18,"attribution":attrIGN}
   ),
-  "Ortho-Photos" : new L.TileLayer(
+  "Ortho-Photos IGN" : new L.TileLayer(
       wmtsurl + '&layer=ORTHOIMAGERY.ORTHOPHOTOS&format=image/jpeg&style=normal',
       {"format":"image/jpeg","minZoom":0,"maxZoom":20,"attribution":attrIGN}
-  ),
-  "OSM" : new L.TileLayer(
-    'https://osm.geobretagne.fr/gwc01/service/tms/1.0.0/osm%3Amap@EPSG%3A3857@png/{z}/{x}/{y}.png',
-    {tms: true,"attribution":"&copy; <a href='https://www.openstreetmap.org/copyright'>les contributeurs d’OpenStreetMap</a>"}
   )
 };
 
-map.addLayer(baseLayers["Plan IGN V2"]);
+map.addLayer(baseLayers["OSM"]);
 
 L.control.layers(baseLayers).addTo(map);
 
