@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>carte choisirgeoportail</title>
+    <meta charset="UTF-8">
+<!-- meta nécessaire pour le mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<!-- styles nécessaires pour le mobile -->
+    <link rel="stylesheet" href="https://visu.gexplor.fr/viewer.css">
+<!-- styles et src de Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <div id="map" style="height: 100%; width: 100%"></div>
+    <script>
+var map = L.map('map').setView([48, 3], 8); // view pour la zone
+L.control.scale({position:'bottomleft', metric:true, imperial:false}).addTo(map);
+
+var wmtsurl = 'https://wxs.ign.fr/choisirgeoportail/geoportail/wmts?'
+            + 'service=WMTS&version=1.0.0&request=GetTile&tilematrixSet=PM&height=256&width=256&'
+            + 'tilematrix={z}&tilecol={x}&tilerow={y}';
+var attrIGN = "&copy; <a href='http://www.ign.fr'>IGN</a>";
+
+var baseLayers = {
+  "Cartes IGN" : new L.TileLayer(
+      wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS&format=image/jpeg&style=normal',
+      {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
+  ),
+  "ScanExpress" : new L.TileLayer(
+      wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD&format=image/jpeg&style=normal',
+      {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
+  ),
+  "Plan IGN" : new L.TileLayer(
+      wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGN&format=image/jpeg&style=normal',
+      {"format":"image/jpeg","minZoom":0,"maxZoom":18,"attribution":attrIGN}
+  ),
+  "Plan IGN V2" : new L.TileLayer(
+      wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&format=image/png&style=normal',
+      {"format":"image/png","minZoom":0,"maxZoom":18,"attribution":attrIGN}
+  ),
+  "Ortho-Photos" : new L.TileLayer(
+      wmtsurl + '&layer=ORTHOIMAGERY.ORTHOPHOTOS&format=image/jpeg&style=normal',
+      {"format":"image/jpeg","minZoom":0,"maxZoom":20,"attribution":attrIGN}
+  ),
+  "NE" : new L.TileLayer(
+    'https://demo.boundlessgeo.com/geoserver/gwc/service/tms/1.0.0/ne:ne@EPSG:900913@png/{z}/{x}/{y}.png',
+    {tms: true}
+  ),
+  "BlueMarble" : new L.TileLayer(
+    'https://demo.boundlessgeo.com/geoserver/gwc/service/tms/1.0.0/nasa:bluemarble@EPSG:900913@jpg/{z}/{x}/{y}.jpg',
+    {tms: true}
+  )
+};
+
+map.addLayer(baseLayers["OSM"]);
+
+L.control.layers(baseLayers).addTo(map);
+
+      </script>
+    </body>
+</html>
