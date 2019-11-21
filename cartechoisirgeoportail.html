@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>carte choisirgeoportail</title>
+    <title>choisirgeoportail</title>
     <meta charset="UTF-8">
 <!-- meta nécessaire pour le mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -56,6 +56,20 @@ var overlays = {
   "BD Uni j+1" : new L.TileLayer(
       wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1&format=image/png&style=normal',
       {"format":"image/png","minZoom":0,"maxZoom":18,"attribution":attrIGN}
+  ),
+  "CORINE Land Cover - 2018" : new L.TileLayer(
+      'https://wxs.ign.fr/corinelancover/geoportail/wmts?'
+            + 'service=WMTS&version=1.0.0&request=GetTile&tilematrixSet=PM&height=256&width=256&'
+            + 'tilematrix={z}&tilecol={x}&tilerow={y}'
+            + '&layer=LANDCOVER.CLC18&format=image/png&style=normal',
+      {"format":"image/png","minZoom":0,"maxZoom":18,"attribution":"&copy; MTES + <a href='http://www.ign.fr'>IGN</a>"}
+  ),
+  "CORINE Land Cover - DOM - 2018" : new L.TileLayer(
+      'https://wxs.ign.fr/corinelancover/geoportail/wmts?'
+            + 'service=WMTS&version=1.0.0&request=GetTile&tilematrixSet=PM&height=256&width=256&'
+            + 'tilematrix={z}&tilecol={x}&tilerow={y}'
+            + '&layer=LANDCOVER.CLC18_DOM&format=image/png&style=CORINE+Land+Cover+-+DOM',
+      {"format":"image/png","minZoom":0,"maxZoom":18,"attribution":"&copy; MTES + <a href='http://www.ign.fr'>IGN</a>"}
   ),
 };
       
