@@ -57,15 +57,14 @@ var overlays = {
       wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1&format=image/png&style=normal',
       {"format":"image/png","minZoom":0,"maxZoom":18,"attribution":attrIGN}
   ),
-  "CORINE Land Cover - 2018" : new L.TileLayer(
+  "CORINE Land Cover - Métropole - 2018" : new L.TileLayer(
       'https://wxs.ign.fr/corinelandcover/geoportail/wmts?'
             + 'service=WMTS&version=1.0.0&request=GetTile&tilematrixSet=PM&height=256&width=256&'
             + 'tilematrix={z}&tilecol={x}&tilerow={y}'
-            + '&layer=LANDCOVER.CLC18&format=image/png&style=normal',
-    // CORINE+Land+Cover+-+France+métropolitaine
+            + '&layer=LANDCOVER.CLC18&format=image/png&style=CORINE+Land+Cover',
       {"format":"image/png","minZoom":0,"maxZoom":18,"attribution":"&copy; MTES + <a href='http://www.ign.fr'>IGN</a>"}
   ),
-  "CORINE Land Cover - DOM - 2018" : new L.TileLayer(
+    "CORINE Land Cover - DOM - 2018" : new L.TileLayer(
       'https://wxs.ign.fr/corinelandcover/geoportail/wmts?'
             + 'service=WMTS&version=1.0.0&request=GetTile&tilematrixSet=PM&height=256&width=256&'
             + 'tilematrix={z}&tilecol={x}&tilerow={y}'
