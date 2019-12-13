@@ -14,5 +14,3 @@
   * [Site IGN de documentation des API](https://geoservices.ign.fr/)
   * [Site IGN pour obtenir une clé](http://professionnels.ign.fr/)
   * [Site de la bibliothèque Leaflet](http://leafletjs.com/)
-
-## 
