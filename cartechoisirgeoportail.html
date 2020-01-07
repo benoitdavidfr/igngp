@@ -25,7 +25,7 @@ var attrIGN = "&copy; <a href='http://www.ign.fr'>IGN</a>";
 var baseLayers = {
   "Plan IGN V2" : new L.TileLayer(
       wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&format=image/png&style=normal',
-      {"format":"image/png","minZoom":0,"maxZoom":18,"attribution":attrIGN}
+      {"format":"image/png","minZoom":3,"maxZoom":18,"attribution":attrIGN}
   ),
   "Plan IGN V1" : new L.TileLayer(
       wmtsurl + '&layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGN&format=image/jpeg&style=normal',
