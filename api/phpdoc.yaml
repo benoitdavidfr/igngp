@@ -1,0 +1,12 @@
+title: igngp/api - doc de l'API d'accès aux services GP de l'IGN
+path: /geoapi/igngp/api
+doc: |
+journal: |
+  20/2/2022:
+    - création
+    
+phpScripts:
+  - /geoapi/igngp/index.php
+phpIncludes:
+htmlPages:
+  - /geoapi/igngp/apidef.yaml

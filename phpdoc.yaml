@@ -1,0 +1,45 @@
+title: igngp - API d'accès aux services GP de l'IGN
+path: /geoapi/igngp
+doc: |
+  L'objectif est de simplifier l'accès au Géoportail de l'IGN d'une part aux services de tuiles
+  et d'autre part aux couches vectorielles au travers de serveurs OGC API Features.
+  Voir https://igngp.geoapi.fr/
+  
+  Exemples pour les tuiles:
+    http://localhost/geoapi/igngp/tile.php - URL du service de tuiles listant les couches
+    http://localhost/geoapi/igngp/tile.php/orthos - URI de la couche
+    http://localhost/geoapi/igngp/tile.php/orthos/8/129/88.jpg - URL d'une image
+    http://localhost/geoapi/igngp/tile.php/cartes/8/129/88.jpg
+    https://igngp.geoapi.fr/tile.php
+    https://igngp.geoapi.fr/tile.php/orthos
+    https://igngp.geoapi.fr/tile.php/orthos/8/129/88.jpg
+    https://tile.openstreetmap.org/8/129/88.png
+    
+  Exemples pour les features:
+    http://localhost/geoapi/igngp/fts.php - URL listant les thèmes IGN, chacun correspondant à un service OGC API Features
+    http://localhost/geoapi/igngp/fts.php/administratif
+    https://igngp.geoapi.fr/fts.php
+    https://igngp.geoapi.fr/fts.php/administratif
+    https://igngp.geoapi.fr/fts.php/administratif/collections
+    https://igngp.geoapi.fr/fts.php/administratif/collections/ADMINEXPRESS-COG-CARTO.LATEST:region
+    https://igngp.geoapi.fr/fts.php/administratif/collections/ADMINEXPRESS-COG-CARTO.LATEST:region/items
+
+journal: |
+  25/2/2022:
+    - synchro sur https://igngp.geoapi.fr/ avec fts.php
+  20/2/2022:
+    - ajout de la clé dans l'URL lorsqu'elle est nécessaire
+    - ajout de la doc de l'API en OpenApi dans https://igngp.geoapi.fr/api/
+    - mise en ligne sur https://igngp.geoapi.fr/
+  18-19/2/2022:
+    - création
+    
+submodules:
+  - /geoapi/igngp/api
+phpScripts:
+  - /geoapi/igngp/tile.php
+  - /geoapi/igngp/genmap.php
+phpIncludes:
+htmlPages:
+  - /geoapi/igngp/config.yaml
+  - /geoapi/igngp/index.html

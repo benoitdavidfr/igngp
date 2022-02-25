@@ -1,0 +1,174 @@
+openapi: 3.0.0
+servers:
+  - url: geoapi.fr
+info:
+  description: API de https://igngp.geoapi.fr
+  version: 1.0.0
+  title: API d'accès simplifié aux données du géoportail IGN
+  # put the contact info for your development or API team
+  contact:
+    email: contact@geoapi.fr
+tags:
+  - name: doc
+    description: documentation du contenu
+  - name: image
+    description: Opérations d'accès à une image
+paths:
+  /tile.php:
+    get:
+      operationId: homePage
+      tags:
+        - doc
+      summary: liste des couches exposées
+      description: |
+        Page d'accueil dont liste des couches exposées par l'accès tuile
+      responses:
+        200:
+          description: Page d'accueil dont liste des couches
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/homePage'
+        400:
+          description: bad input parameter
+  /tile.php/{layer}:
+    get:
+      tags:
+        - doc
+      summary: documentation de la couche sélectionnée
+      operationId: layerDoc
+      description: |
+        Description de la couche définie
+      parameters:
+        - in: path
+          name: layer
+          description: nom de la couche
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: description de la couche
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Layer'
+        400:
+          description: bad input parameter
+  /tile.php/{layer}/{z}/{x}/{y}.{fmt}:
+    get:
+      tags:
+        - image
+      summary: retourne une imagette
+      operationId: getTile
+      description: |
+        Retourne l'imagette de la couche {layer} correspondant au zoom {z}, colonne {x}, ligne {y} et format {fmt}
+      parameters:
+        - in: path
+          name: layer
+          description: nom de la couche
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: z
+          description: niveau de zoom
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: x
+          description: no de colonne
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: y
+          description: no de ligne
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: fmt
+          description: format de la couche
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: description de la couche
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Layer'
+        400:
+          description: bad input parameter
+components:
+  schemas:
+    homePage:
+      description: Page d'accueil dont liste des couches
+      type: object
+      properties:
+        title:
+          description: Titre du document
+          type: string
+        layers:
+          description: Liste des couches
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                description: identifiant de la couche
+                type: string
+              title:
+                description: titre de la couche
+                type: string
+              abstract:
+                description: résumé de la couche
+                type: string
+    Layer:
+      description: définition d'une couche
+      type: object
+      required: [title, server, gpname, format]
+      properties:
+        title:
+          description: titre de la couche
+          type: string
+        abstract:
+          description: texte de résumé de la couche
+          type: string
+        doc:
+          description: URL d'infos complémentaires
+          type: string
+        server:
+          description: identifiant du serveur contenant la couche
+          type: string
+        gpname:
+          description: nom de la couche dans le Géoportail
+          type: string
+        style:
+          description: style à utiliser si <> normal
+          type: string
+        gpkey:
+          description: clé générique spécifique à la couche si existe
+          type: string
+        format:
+          description: format des imagettes
+          type: string
+          enum: [png, jpg]
+        minZoom:
+          description: zoom minimum
+          type: integer
+        maxZoom:
+          description: zoom maximum
+          type: integer
+        attribution:
+          description: informations sur la propriété intellectuelle sauf si IGN, utilisable par Leaflet
+          type: string
+        detectRetina:
+          description: |
+            si présent et false alors instruction pour Leaflet de positionner le champ detectRetina à false
+            pour cette couche
+          type: boolean
+          enum: [false]

@@ -1,0 +1,254 @@
+title: schema du fichier de config de igngp
+$id: https://igngp.geoapi.fr/config.schema.yaml
+$schema: http://json-schema.org/schema#
+definitions:
+  geometryType:
+    description: |
+      liste des types géométriques élémentaires construite à partir du type GeoJSON de géométrie en y ajoutant
+      éventuellement 2D/3D ainsi que le type none indiquant qu'un objet n'a pas de géométrie.
+    type: string
+    enum:
+      - Point
+      - Point2D
+      - Point3D
+      - MultiPoint
+      - MultiPoint2D
+      - MultiPoint3D
+      - LineString
+      - LineString2D
+      - LineString3D
+      - MultiLineString
+      - MultiLineString2D
+      - MultiLineString3D
+      - Polygon
+      - Polygon2D
+      - Polygon3D
+      - MultiPolygon
+      - MultiPolygon2D
+      - MultiPolygon3D
+      - GeometryCollection
+      - none
+  collection:
+    description: |
+      description d'une collection d'un jeu de données.
+      Le concept de collection est défini par le standard OGC API Features.
+    type: object
+    additionalProperties: false
+    required: [title, geometryType]
+    properties:
+      title:
+        description: titre de la collection destiné à un humain
+        type: string
+      description:
+        description: |
+          description plus détaillée, comprend la définition, les critères de sélection, ...
+          Possibilité d'utiliser du markdown.
+        type: string
+      geometryType:
+        description: |
+          Type(s) de géométrie des objets de la classe.
+          Construit à partir du type GeoJSON en y ajoutant éventuellement 2D/3D ainsi que le type none
+          indiquant que les objets n'ont pas de géométrie.
+          Peut être soit un type ou une liste de types possibles.
+        oneOf:
+          - $ref: '#/definitions/geometryType'
+          - type: array
+            items:
+              $ref: '#/definitions/geometryType'
+        enum:
+          - Point
+          - Point2D
+          - Point3D
+          - MultiPoint
+          - MultiPoint2D
+          - MultiPoint3D
+          - LineString
+          - LineString2D
+          - LineString3D
+          - MultiLineString
+          - MultiLineString2D
+          - MultiLineString3D
+          - Polygon
+          - Polygon2D
+          - Polygon3D
+          - MultiPolygon
+          - MultiPolygon2D
+          - MultiPolygon3D
+          - GeometryCollection
+          - none
+  specification:
+    description: définition d'une spécification
+    type: object
+    required: [title]
+    properties:
+      title:
+        description: titre de la spécification
+        type: string
+      abstract:
+        description: résumé de la spécification
+        type: string
+      identifier:
+        description: identifiant de la spécification
+        type: string
+      doc:
+        description: lien http éventuel vers une doc complémentaire
+        type: string
+      collections:
+        description: dictionnaire des collections indexé sur l'id de la collection, qui est celui du WFS IGN
+        type: object
+        additionalProperties: false
+        patternProperties:
+          ^[-a-zA-Z0-9_+:.]+$:
+            description: définition d'une collection
+            $ref: '#/definitions/collection'
+  theme:
+    description: définition d'un thème
+    type: object
+    required: [title, abstract]
+    properties:
+      title:
+        description: titre du thème
+        type: string
+      abstract:
+        description: résumé du thème
+        type: string
+      doc:
+        description: lien http éventuel vers une doc complémentaire
+        type: string
+      conformsTo:
+        description: |
+          pointeur JSON vers la spécification du jeu de données défini dans le dictionnaire specifications
+          soit du même document soit d'un autre document
+        type: object
+        additionalProperties: false
+        required: [$ref]
+        properties:
+          $ref:
+            type: string
+      
+type: object
+properties:
+  title:
+    description: titre du document
+    type: string
+  abstract:
+    description: résumé du document
+    type: string
+  journal:
+    description: journal des principales modifications indexé par la date sous la forme JJ/MM/DDDD
+    type: object
+    additionalProperties: false
+    patternProperties:
+      ^\d+(-\d+)?/\d+/\d+:
+        description: texte pour cette date
+        type: string
+  $schema:
+    description: schema JSON du document
+    oneOf:
+      - description: schema in-line
+        $ref: http://json-schema.org/schema#
+      - description: référence vers un fichier séparé
+        type: string
+  gpkeys:
+    description: dictionnaire des clés persos indéxés par la valeur de la clé
+    additionalProperties: false
+    patternProperties:
+      ^[a-z0-9]+$:
+        type: object
+        properties:
+          expires:
+            description: date d'expiration de la clé
+            type: string
+            format: date
+          referers:
+            description: si la clé est définie avec un referer alors la valeur définie sinon absent
+            type: string
+  specifications:
+    description: dictionnaire des spécifications d'une base vectorielle.
+    type: object
+    additionalProperties: false
+    patternProperties:
+      ^[-a-zA-Z0-9_+.]+$:
+        description: définition d'une spécification
+        $ref: '#/definitions/specification'
+  themes:
+    description: |
+      dictionnaire des thèmes, chacun correspondant à une clé d'un serveur WFS du Géoportail.
+      De plus chaque couche de tuiles appartient à un thème.
+    type: object
+    additionalProperties: false
+    patternProperties:
+      ^[-a-zA-Z0-9_+]+$:
+        description: définition d'un thème
+        $ref: '#/definitions/theme'
+  servers:
+    description: dictionnaire des serveurs indexé par un identifiant
+    type: object
+    additionalProperties: false
+    patternProperties:
+      ^(WMSR|WMSV|WMTS|WFS)$:
+        description: description du serveur
+        type: object
+        required: [protocol, url]
+        properties:
+          title:
+            description: titre du serveur
+            type: string
+          protocol:
+            type: string
+            enum: [WMTS, WMS, WFS]
+          url:
+            description: URL du serveur avec paramètres entre {}
+            type: string
+  layers:
+    description: dictionnaire des couches indexé par l'identifiant de la couche
+    type: object
+    additionalProperties: false
+    patternProperties:
+      ^[-a-zA-Z0-9_+]+$:
+        description: définition d'une couche de tuiles
+        type: object
+        required: [title, server, gpname, format]
+        properties:
+          title:
+            description: titre de la couche
+            type: string
+          abstract:
+            description: texte de résumé de la couche
+            type: string
+          doc:
+            description: URL d'infos complémentaires
+            type: string
+          server:
+            description: identifiant du serveur contenant la couche
+            type: string
+          gpname:
+            description: nom de la couche dans le Géoportail
+            type: string
+          style:
+            description: style à utiliser si <> normal
+            type: string
+          gpkey:
+            description: clé générique spécifique à la couche si existe
+            type: string
+          format:
+            description: format des imagettes
+            type: string
+            enum: [png, jpg]
+          minZoom:
+            description: zoom minimum
+            type: integer
+          maxZoom:
+            description: zoom maximum
+            type: integer
+          attribution:
+            description: informations sur la propriété intellectuelle sauf si IGN, utilisable par Leaflet
+            type: string
+          detectRetina:
+            description: |
+              si présent et false alors instruction pour Leaflet de positionner le champ detectRetina à false
+              pour cette couche
+            type: boolean
+            enum: [false]
+  eof:
+    type: 'null'

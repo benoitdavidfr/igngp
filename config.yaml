@@ -1,0 +1,606 @@
+title: Documentation des couches utilisables avec tile.php et des thèmes utilisables dans fts.php
+abstract: |
+  Ce fichier contient une documentation synthétique sur l'accès aux ressources de l'IGN sur le Géoportail.
+  Il est utilisé par tile.php pour fournir l'accès aux tuiles et la documentation des couches
+  et par fts.php pour connaitre la liste des thèmes et pour chacun les infos associées notamment la spec du thème.
+journal:
+  19-20/2/2022: recopie des couches de la V1
+  18/2/2022: création
+$schema: config
+gpkeys:
+  ftdyo2un11l900zl1hyj29c7:
+    expires: '2023-02-18'
+    referers: localhost,.*.geoapi.fr.*
+themes:
+  administratif:
+    title: Administratif
+    abstract: |
+      Le thème "administratif" comprend des données Admin Express et Admin Express COG
+      décrits dans https://geoservices.ign.fr/adminexpress  
+    doc: https://geoservices.ign.fr/services-web-experts-administratif
+    conformsTo: https://specs.georef.eu/admin-expresv3.1
+  adresse:
+    title: Adresse
+    abstract: |
+      La thématique "adresse" comprend des données Adresse Premium et BAN.
+  agriculture:
+    title: Agriculture
+    abstract: |
+      La thématique "agriculture" comprend des données BCAE et RPG.
+  altimetrie:
+    title: Altimétrie
+    abstract: |
+      La thématique "altimetrie" comprend des données RGE ALTI.
+  cartes:
+    title: Cartes
+    abstract: |
+      La thématique "cartes" comprend des données Etat-Major, SCAN et PLANIGN.
+  cartovecto:
+    title: Cartographie vectorielle
+    abstract: |
+      La thématique "cartographie vectorielle" comprend des données de BDPR, BAN, BD Carto et Contours Iris.
+  clc:
+    title: Corine Land Cover et OCS-GE
+    abstract: |
+      La thématique "Corine Land Cover et OCS-GE" comprend des données d'occupation du sol et de Corine Land Cover.
+  economie:
+    title: Economie et Statistique
+    abstract: |
+      La thématique "Economie et Statistique" comprend des données de la DREAL et de l'INSEE.
+  environnement:
+    title: Environnement
+    abstract: |
+      La thématique "environnement" comprend des données de la BD forêt, MNHN et PROTECTED AREAS.
+  geodesie:
+    title: Geodesie
+    abstract: |
+      La thématique "géodésie" comprend des données de la BD Géodésique.
+  ortho:
+    title: Image aérienne
+    abstract: |
+      La thématique "image aérienne" comprend des données de la BD Ortho, Ortho HR, THR, IRC, PAC, Alex et PCRS
+  orthohisto:
+    title: Image aérienne historique
+    abstract: |
+      La thématique "image aérienne historique" comprend des données de la BD Ortho historique.
+  satellite:
+    title: Image satellitaire
+    abstract: |
+      La thématique "image satellitaire" comprend des données de Pléiades, SPOT et RapidEye.
+  lambert93:
+    title: Lambert-93
+    abstract: |
+      La thématique "lambert93" comprend des données en projection Lambert-93.
+  # calcul - Localisation et Calcul
+  sol:
+    title: Occupation du sol
+    abstract: |
+      La thématique "occupation du sol" comprend des données de la BD CARTO État-major.
+  parcellaire:
+    title: Parcellaire
+    abstract: |
+      La thématique "parcellaire" comprend des données de la BD Parcellaire, PCI et AOC.
+  topographie:
+    title: Topographie
+    abstract: |
+      La thématique "topographie" comprend des données de la BD Topo.
+  transports:
+    title: Transports
+    abstract: |
+      La thématique "transports" comprend des données de la DGAC, des Réseaux de transports exceptionnels,
+      de Restriction des drones, de sens de circulation et de sécurité routière.
+servers:
+  WMTS:
+    title: serveur WMTS
+    protocol: WMTS
+    url: https://wxs.ign.fr/{key}/geoportail/wmts
+  WMSR:
+    title: serveur WMS exposant les données images
+    protocol: WMS
+    url: https://wxs.ign.fr/{key}/geoportail/r/wms
+  WMSV:
+    title: serveur WMS exposant les données vecteur
+    protocol: WMS
+    url: https://wxs.ign.fr/{key}/geoportail/v/wms
+  WFS:
+    title: serveur WFS
+    protocol: WFS
+    url: https://wxs.ign.fr/{key}/geoportail/wfs
+layers:
+  plan-ignv2: # 1) plan-ign
+    title: Pyramide Plan IGN v2
+    server: WMTS
+    gpname: GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2
+    gpkey: cartes
+    format: png
+    minZoom: 0
+    maxZoom: 18
+    detectRetina: false
+
+  ortho: # 2) orthos images 
+    title: Photographies aériennes
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHOPHOTOS
+    gpkey: ortho
+    format: jpg
+    minZoom: 0
+    maxZoom: 20
+  orthoshr:
+    title: Ortho HR
+    server: WMTS
+    gpname: HR.ORTHOIMAGERY.ORTHOPHOTOS
+    gpkey: ortho
+    format: jpg
+    minZoom: 0
+    maxZoom: 20
+  orthosthr:
+    title: Ortho THR
+    server: WMTS
+    gpname: THR.ORTHOIMAGERY.ORTHOPHOTOS
+    gpkey: ortho
+    format: jpg
+    minZoom: 0
+    maxZoom: 21
+  ortho-express:
+    title: 'Ortho Express 2021'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHOPHOTOS.ORTHO-EXPRESS.2021
+    gpkey: ortho
+    abstract: |
+      L’Ortho Express est une mosaïque d’ortho-images numériques. Elle se différencie des autres produits orthophotographiques
+      de l’IGN par le fait que, par souci de minimiser les délais de sa production, elle résulte d'un traitement massivement
+      automatisé. L’Ortho Express vise en premier lieu à répondre à une exigence sur les délais de production.
+      Il s’agit donc d’un produit dont les caractéristiques techniques sont contraintes par cette exigence forte.
+    format: jpg
+    minZoom: 0
+    maxZoom: 19
+  ortho-litto2000:
+    title: Ortholittorale 2000
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHOPHOTOS.COAST2000
+    gpkey: ortho
+    doc: 'http://www.geolittoral.developpement-durable.gouv.fr/ortho-littorale-2000-r182.html'
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: 'METL, IGN'
+  orthos2011-2015:
+    title: 'Ortho-images 2011-2015'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHOPHOTOS2011-2015
+    gpkey: orthohisto
+    format: jpg
+    minZoom: 0
+    maxZoom: 18
+  orthos2006-2010:
+    title: 'Ortho-images 2006-2010'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHOPHOTOS2006-2010
+    gpkey: orthohisto
+    format: jpg
+    minZoom: 0
+    maxZoom: 18
+  orthos2000-2005:
+    title: 'Ortho-images 2000-2005'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHOPHOTOS2000-2005
+    gpkey: orthohisto
+    format: jpg
+    minZoom: 0
+    maxZoom: 18
+  orthos1950-1965:
+    title: 'Ortho-images 1950-1965'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHOPHOTOS.1950-1965
+    gpkey: orthohisto
+    format: png
+    minZoom: 0
+    maxZoom: 18
+  spot:
+    title: Spot 2021
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.SPOT.2021
+    gpkey: satellite
+    format: jpg
+    minZoom: 0
+    maxZoom: 17
+    attribution: 'CIRAD, CNES, CNRS, IGN, IRD, Irstea, GEOSUD'
+  spot2020:
+    title: Spot 2020
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.SPOT.2020
+    gpkey: satellite
+    format: jpg
+    minZoom: 0
+    maxZoom: 17
+    attribution: 'CIRAD, CNES, CNRS, IGN, IRD, Irstea, GEOSUD'
+  spot2019:
+    title: Spot 2019
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.SPOT.2019
+    gpkey: satellite
+    format: jpg
+    minZoom: 0
+    maxZoom: 17
+    attribution: 'CIRAD, CNES, CNRS, IGN, IRD, Irstea, GEOSUD'
+  spot2018:
+    title: 'Spot 2018'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.SPOT.2018
+    gpkey: satellite
+    format: jpg
+    minZoom: 0
+    maxZoom: 17
+    attribution: 'CIRAD, CNES, CNRS, IGN, IRD, Irstea, GEOSUD'
+  spot2017:
+    title: 'Spot 2017'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.SPOT.2017
+    gpkey: satellite
+    format: jpg
+    minZoom: 0
+    maxZoom: 17
+    attribution: 'CIRAD, CNES, CNRS, IGN, IRD, Irstea, GEOSUD'
+  spot2016:
+    title: 'Spot 2016'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.SPOT.2016
+    gpkey: satellite
+    format: jpg
+    minZoom: 0
+    maxZoom: 17
+    attribution: 'CIRAD, CNES, CNRS, IGN, IRD, Irstea, GEOSUD'
+  spot2015:
+    title: 'Spot 2015'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.SPOT.2015
+    gpkey: satellite
+    format: jpg
+    minZoom: 0
+    maxZoom: 17
+    attribution: 'CIRAD, CNES, CNRS, IGN, IRD, Irstea, GEOSUD'
+  spot2014:
+    title: 'Spot 2014'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.SPOT.2014
+    gpkey: satellite
+    format: jpg
+    minZoom: 0
+    maxZoom: 17
+    attribution: 'CNES, IGN, GEOSUD'
+  pleiades2022:
+    title: Pléiades 2022
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.PLEIADES.2022
+    gpkey: satellite
+    format: png
+    minZoom: 0
+    maxZoom: 18
+    attribution: ''
+  pleiades2021:
+    title: Pléiades 2021
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.PLEIADES.2021
+    gpkey: satellite
+    format: png
+    minZoom: 0
+    maxZoom: 18
+    attribution: ''
+  pleiades2020:
+    title: Pléiades 2020
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.PLEIADES.2020
+    gpkey: satellite
+    format: png
+    minZoom: 0
+    maxZoom: 18
+    attribution: ''
+  pleiades2019:
+    title: Pléiades 2019
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.PLEIADES.2019
+    gpkey: satellite
+    format: png
+    minZoom: 0
+    maxZoom: 18
+    attribution: ''
+  pleiades2018:
+    title: 'Pléiades 2018'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.PLEIADES.2018
+    gpkey: satellite
+    format: png
+    minZoom: 0
+    maxZoom: 18
+    attribution: ''
+  pleiades2017:
+    title: 'Pléiades 2017'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.PLEIADES.2017
+    gpkey: satellite
+    format: png
+    minZoom: 0
+    maxZoom: 18
+    attribution: ''
+  pleiades2016:
+    title: 'Pléiades 2016'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.PLEIADES.2016
+    #style: white_is_transparent
+    gpkey: satellite
+    format: png
+    minZoom: 0
+    maxZoom: 18
+    attribution: ''
+  pleiades2015:
+    title: 'Pléiades 2015'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.PLEIADES.2015
+    gpkey: satellite
+    format: png
+    minZoom: 0
+    maxZoom: 18
+  pleiades2014:
+    title: 'Pléiades 2014'
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.PLEIADES.2014
+    gpkey: satellite
+    format: png
+    minZoom: 0
+    maxZoom: 18
+    attribution: ''
+  pleiades2013:
+    title: Pléiades 2013
+    server: WMTS
+    gpname: ORTHOIMAGERY.ORTHO-SAT.PLEIADES.2013
+    gpkey: satellite
+    format: png
+    minZoom: 0
+    maxZoom: 18
+    attribution: ''
+
+  cartes: # 3) Cartes
+    title: Cartes # l'accès à cette couche utilise la clé personnelle
+    server: WMTS
+    gpname: GEOGRAPHICALGRIDSYSTEMS.MAPS
+    format: jpg
+    minZoom: 0
+    maxZoom: 18
+    detectRetina: false
+  bduni-j+1:
+    title: 'BD UNI J+1'
+    server: WMTS
+    gpname: GEOGRAPHICALGRIDSYSTEMS.MAPS.BDUNI.J1
+    gpkey: cartes
+    format: png
+    minZoom: 10
+    maxZoom: 18
+    detectRetina: false
+  cartes-oaci: # l'accès à cette couche utilise la clé personnelle
+    title: Cartes OACI
+    server: WMTS
+    gpname: GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-OACI
+    format: jpg
+    minZoom: 6
+    maxZoom: 11
+    detectRetina: false
+  scan50-1950:
+    title: Cartes 1:50.000 de 1950
+    server: WMTS
+    gpname: GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN50.1950
+    gpkey: cartes
+    format: jpg
+    minZoom: 3
+    maxZoom: 15
+    detectRetina: false
+  cartes-etatmajor40:
+    title: Cartes de l'état-major 1/40 000 (1820-1866)
+    server: WMTS
+    gpname: GEOGRAPHICALGRIDSYSTEMS.ETATMAJOR40
+    gpkey: cartes
+    format: jpg
+    minZoom: 6
+    maxZoom: 15
+    detectRetina: false
+  cartes-etatmajor10:
+    title: Carte des environs de Paris 1/10 000 (1818-1824)
+    gpname: GEOGRAPHICALGRIDSYSTEMS.ETATMAJOR10
+    server: WMTS
+    gpkey: cartes
+    format: jpg
+    minZoom: 6
+    maxZoom: 15
+    detectRetina: false
+  carte-paris-1906:
+    title: Carte de Paris de 1906
+    server: WMTS
+    gpname: GEOGRAPHICALGRIDSYSTEMS.1900TYPEMAPS
+    gpkey: cartes
+    format: jpg
+    minZoom: 6
+    maxZoom: 15
+    detectRetina: false
+  carte-guyane-bonne:
+    title: 'Carte de Guyane (1780 - Col Bonne)'
+    abstract: |
+      Carte de Guyane française établie par M. Bonne, Ingénieur-Hydrographe de la Marine. Cette carte figure dans ‘L’atlas de
+      toutes les parties connues du globe terrestre’, ouvrage rédigé par l’abbé Guillaume-Thomas RAYNAL et publié à Genève
+      en 1780.
+    server: WMTS
+    gpname: GEOGRAPHICALGRIDSYSTEMS.BONNE
+    gpkey: cartes
+    format: jpg
+    minZoom: 6
+    maxZoom: 10
+    detectRetina: false
+  
+  altitude: # 4) couches issues de MNT
+    title: MNT affiché en teintes hypsométriques
+    abstract: |
+      La couche altitude se compose d'un MNT (Modèle Numérique de Terrain) affiché en teintes hypsométriques
+      et issu de la BD ALTI®.
+    server: WMTS
+    gpname: ELEVATION.SLOPES
+    gpkey: altimetrie
+    format: jpg
+    minZoom: 6
+    maxZoom: 14
+  carte-pentes:
+    title: Carte des pentes
+    abstract: Carte des zones ayant une valeur de pente supérieure à 30°-35°-40°-45° d''après la BD ALTI au pas de 5m.
+    server: WMTS
+    gpname: GEOGRAPHICALGRIDSYSTEMS.SLOPES.MOUNTAIN
+    gpkey: altimetrie
+    format: png
+    minZoom: 6
+    maxZoom: 14
+  carte-pentes-bcae5:
+    title: Carte des pentes pour l'agriculture BCAE5
+    server: WMTS
+    gpname: GEOGRAPHICALGRIDSYSTEMS.SLOPES.PAC
+    gpkey: agriculture
+    format: png
+    minZoom: 6
+    maxZoom: 14
+  estompage:
+    title: Estompage
+    abstract: |
+      Couche d''ombrage calculée à partir des données altimétriques de l'IGN permettant de mieux appréhender le relief.
+      L'estompage proposé est réalisé à partir des données MNT BDAlti au pas de 25m avec deux soleils : un au nord-est
+      de hauteur 45°, l'autre zénithal.
+    server: WMTS
+    gpname: ELEVATION.ELEVATIONGRIDCOVERAGE.SHADOW
+    gpkey: altimetrie
+    style: estompage_grayscale
+    format: png
+    minZoom: 0
+    maxZoom: 21
+
+  ocsge-couverture: # 5) OCS-GE
+    title: OCSGE - Couverture
+    server: WMTS
+    gpname: OCSGE.COUVERTURE
+    gpkey: clc
+    format: png
+    minZoom: 6
+    maxZoom: 16
+    attribution: ''
+  ocsge-usage:
+    title: 'OCSGE - Usage'
+    server: WMTS
+    gpname: OCSGE.USAGE
+    gpkey: clc
+    format: png
+    minZoom: 6
+    maxZoom: 16
+    attribution: ''
+  ocsge-constructions:
+    title: 'OCSGE - Constructions'
+    server: WMTS
+    gpname: OCSGE.CONSTRUCTIONS
+    gpkey: clc
+    format: png
+    minZoom: 6
+    maxZoom: 16
+    attribution: ''
+
+  aerodromes: # 6) diverses couches vecteur dans l'ordre logique d'affichage
+    title: Aérodromes
+    abstract: Localisation des aéroports, aérodromes et héliports, des pistes, bâtiments et équipements dédiés.
+    server: WMTS
+    gpname: TRANSPORTNETWORKS.RUNWAYS
+    gpkey: topographie
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: IGN
+  hydrographie:
+    title: Hydrographie
+    server: WMTS
+    gpname: HYDROGRAPHY.HYDROGRAPHY
+    gpkey: topographie
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: IGN
+  trait-de-cote-histolitt:
+    title: Trait de côte Histolitt
+    abstract: |
+      Produit par le Shom et l'IGN, ce trait de côte correspond à la laisse des plus hautes mers dans le cas d'une marée
+      astronomique de coefficient 120 et dans des conditions météorologiques normales (pas de vent du large, pas de dépression
+      atmosphérique susceptible d'élever le niveau de la mer).
+    server: WMTS
+    gpname: ELEVATION.LEVEL0
+    gpkey: altimetrie
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: (c) IGN, (c) SHOM
+  ferroviaire:
+    title: Réseau ferroviaire
+    server: WMTS
+    gpname: TRANSPORTNETWORKS.RAILWAYS
+    gpkey: topographie
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: IGN
+  batiments:
+    title: Bâtiments
+    server: WMTS
+    gpname: BUILDINGS.BUILDINGS
+    gpkey: topographie
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: IGN
+  routes:
+    title: Routes
+    server: WMTS
+    gpname: TRANSPORTNETWORKS.ROADS
+    gpkey: topographie
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: IGN
+    detectRetina: false
+  lignes-electriques:
+    title: Lignes électriques
+    server: WMTS
+    gpname: UTILITYANDGOVERNMENTALSERVICES.ALL
+    gpkey: topographie
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: IGN
+  limites-administratives:
+    title: Limites administratives
+    abstract: 'Limites des régions, départements, cantons et communes.'
+    server: WMTS
+    gpname: LIMITES_ADMINISTRATIVES_EXPRESS.LATEST
+    gpkey: administratif
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: IGN
+  parcelles-cadastrales:
+    title: Parcelles cadastrales (Parcellaire Express - PCI)
+    server: WMTS
+    gpname: CADASTRALPARCELS.PARCELLAIRE_EXPRESS
+    gpkey: parcellaire
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: 'IGN & DGFiP'
+    detectRetina: false
+  toponymes:
+    title: Dénominations géographiques
+    server: WMTS
+    gpname: GEOGRAPHICALNAMES.NAMES
+    gpkey: topographie
+    format: png
+    minZoom: 6
+    maxZoom: 18
+    attribution: IGN
+    detectRetina: false
+eof:

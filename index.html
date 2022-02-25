@@ -1,0 +1,95 @@
+<!--PhpDoc:
+name: index.html
+title: page d'accueil de https://igngp.geoapi.fr/
+-->
+<!DOCTYPE HTML><html><head><meta charset='UTF-8'><title>igngp.geoapi.fr</title></head><body>
+<h2>igngp.geoapi.fr</h2>
+
+Ce site propose 2 services pour simplifier la consommation des données exposées par le Géoportail de l'IGN.
+Le premier simplifie l'utilisation de données images sous forme de tuiles et
+le second simplifie l'utilisation des données vecteur au travers de serveurs OGC API Features.
+
+<h3>Tuiles au format XYZ</h3>
+
+Le premier service consiste à exposer les données images du Géoportail de l'IGN selon les principes suivants :
+<ol>
+<li>L'idée principale est d'utiliser le format XYZ
+  (<a href='https://en.wikipedia.org/wiki/Tiled_web_map' target='_blank'>plus d'infos ici</a>)
+  qui est simple et a été largement popularisé par OSM et Google Maps,
+  et est donc largement utilisé nativement dans de nombreux progiciels,
+  comme <a href='https://leafletjs.com/' target='_blank'>Leaflet</a> ou Mapbox.
+  Ce format est plus simple que le standard WMTS utilisé par le Géoportail.<br>
+  Au travers de ce format, les tuiles sont accessibles en
+  <a href='https://en.wikipedia.org/wiki/Web_Mercator' target='_blank'>projection Web Mercator</a>
+  par l'URL :<br>
+  <code><b>https://igngp.geoapi.fr/tile.php/{layer}/{z}/{x}/{y}.[jpg|png]</b></code>
+  où:<ul>
+    <li><code>{layer}</code> est le nom de la couche</li>
+    <li><code>{z}</code> est le niveau de zoom</li>
+    <li><code>{x}</code> et <code>{y}</code> sont respectivement les numéros de colonne et de ligne de l'image</li>
+    <li><code>[jpg|png]</code> est le format de la tuile qui doit valoir <code>jpg</code> ou <code>png</code></li>
+  </ul>
+  <i>Exemple:</i>
+  <code><b><a href='tile.php/plan-ignv2/8/127/91.png'>https://igngp.geoapi.fr/tile.php/plan-ignv2/8/127/91.png</a></b></code>
+  est l'URL d'une tuile de la couche <code>plan-ignv2</code>.<br>
+  En pratique, dans la plupart des logiciels la couche est définie par l'URL dans laquelle on remplace le motif {layer}
+  par le nom effectif de la couche ainsi que le format par soit <code>png</code> soit <code>jpg</code>
+  tout en laissant les motifs {z}, {x} et {y} sans les remplacer.
+  Ainsi, par exemple, l'URL de la couche Plan IGN v2 est<br>
+  <code><b><a href='tile.php/plan-ignv2/{z}/{x}/{y}.png'>
+    https://igngp.geoapi.fr/tile.php/plan-ignv2/{z}/{x}/{y}.png</a></b></code>
+</li>
+
+<li>
+  Pour les couches pour lesquelles une clé est demandée dans le Géoportail, on l'ajoute à l'URL dont le motif devient :<br>
+  <code><b>https://igngp.geoapi.fr/tile.php/{layer}/{gpkey}/{z}/{x}/{y}.[jpg|png]</b></code>
+  où <code>{gpkey}</code> est la clé pour la couche.
+  <br><i>Exemple:</i><ul>
+    <li><a href='tile.php/cartes/ftdyo2un11l900zl1hyj29c7/8/127/91.jpg'>
+    <code>https://igngp.geoapi.fr/tile.php/cartes/ftdyo2un11l900zl1hyj29c7/8/127/91.jpg</code></a>
+    est l'URL d'une tuile de la couche cartes et</li>
+    <li><a href='tile.php/cartes/ftdyo2un11l900zl1hyj29c7/{z}/{x}/{y}.jpg'>
+    <code>https://igngp.geoapi.fr/tile.php/cartes/ftdyo2un11l900zl1hyj29c7/{z}/{x}/{y}.jpg</code></a>
+    est l'URL de la couche cartes avec une clé particulière</li>
+    <li><a href='tile.php/cartes/{key}/{z}/{x}/{y}.jpg'>
+    <code>https://igngp.geoapi.fr/tile.php/cartes/{key}/{z}/{x}/{y}.jpg</code></a>
+    est l'URL de la couche cartes sans clé particulière</li>
+  </ul>
+  Attention, la clé fournie n'est utilisable qu'à partir du site geoapi.fr
+</li>
+
+<li>La seconde idée est de simplifier l'accès à la documentation et de proposer de prévisualiser simplement les couches
+  au moyen d'une carte Leaflet accessible à partir de l'appel de <a href='tile.php'>tile.php</a> sans paramètre.
+  
+<li>De plus, les noms de couches sont simplifiés par rapport au Géoportail IGN.
+<li>Au final, ce service prend la forme d'un ensemble de couches tuilées qui est documenté au format Open API 3.0
+  dans le <a href='api'>document https://igngp.geoapi.fr/api</a>.
+</ol>
+
+
+<h3>Serveurs d'objets vectoriels conformes au protocole OGC API Features</h3>
+
+Le second service consiste à exposer les données vecteur sous la forme d'un bouquet de serveurs conformes
+au standard OGC API Features, avec un serveur par thème du Géoportail.<br>
+Les différents serveurs sont accessible à l'adresse <a href='fts.php'>https://igngp.geoapi.fr/fts.php</a>
+
+
+<a id='cu'></a>
+<h3>Conditions d'utilisation</h3>
+
+Les données exposées sont diffusées par l'IGN selon les conditions suivantes :
+
+<table border=1><tr><td>
+Les données présentes sur le site sont gratuites et disponibles en licence ouverte selon le principe de la licence Etalab 2.0
+depuis le 1er janvier 2021.
+D’autres données complètent la politique d’ouverture des données de l’IGN depuis le 1er juin 2021.
+Les données SCAN 25®, SCAN 100® et SCAN OACI sont ainsi gratuites en téléchargement ou en flux mais seulement
+pour un usage professionnel ou associatif.
+Tout professionnel ou particulier souhaitant développer une offre commerciale papier ou numérique destinée au grand public
+devra s’acquitter d’une redevance
+selon les <a href='https://geoservices.ign.fr/cgu-licences' target='_blank'>conditions générales d’utilisation</a> (CGU).
+</table><br>
+
+De plus, ce site est un prototype et aucune garantie de performance ou de continuité de service n'est proposée.</p>
+
+Pour plus d'informations sur ce site, vous pouvez contacter <a href='mailto:contact@geoapi.fr'>Benoit DAVID</a>.
