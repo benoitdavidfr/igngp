@@ -39,9 +39,11 @@ Les URI des serveurs sont les suivants :<ul>\n";
   }
 
   echo "</ul>
-Ces serveurs peuvent notamment être utilisés avec les dernières versions
-de <a href='https://www.qgis.org/fr/site/' target='_blank'>QGis (3.16)</a>
-ou être consultés en Html.<br>\n";
+Ces serveurs peuvent notamment être utilisés :<ul>
+  <li>pour naviguer avec un navigateur en Html,</li>
+  <li>y accéder au travers d'une API décrite en Open API conformément au standard OGC API Features,</li>
+  <li>enfin, les consulter avec les dernières versions
+    de <a href='https://www.qgis.org/fr/site/' target='_blank'>QGis (>= 3.16)</a>.<br>\n";
   die();
 }
 

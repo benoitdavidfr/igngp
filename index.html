@@ -69,9 +69,40 @@ Le premier service consiste à exposer les données images du Géoportail de l'I
 
 <h3>Serveurs d'objets vectoriels conformes au protocole OGC API Features</h3>
 
-Le second service consiste à exposer les données vecteur sous la forme d'un bouquet de serveurs conformes
-au standard OGC API Features, avec un serveur par thème du Géoportail.<br>
-Les différents serveurs sont accessible à l'adresse <a href='fts.php'>https://igngp.geoapi.fr/fts.php</a>
+Le second service cherche à faciliter l'accès aux données vecteur,
+premièrement à tout un chacun en interactif en Html,
+deuxièmement aux développeurs ne connaissant pas le standard WFS
+et enfin, troisièmement, aux géomaticiens utilisant QGis.</p>
+
+Ce second service consiste à exposer les données vecteur exposées par le Géoportail
+sous la forme d'un bouquet de serveurs conformes
+au <a href='http://docs.opengeospatial.org/is/17-069r3/17-069r3.html' target='_blank'>standard OGC API Features</a>,
+avec un serveur par thème du Géoportail.
+Les intérêts principaux de ce standard sont: <ol>
+  <li>l'utilisation d'une API<ul>
+    <li>plus conforme aux principes du web que l'utilisation des services WFS
+      (pour plus d'infos voir <a href='https://www.w3.org/TR/dwbp/' target='_blank'>https://www.w3.org/TR/dwbp/</a>
+      et <a href='https://docs.opengeospatial.org/wp/16-019r4/16-019r4.html' target='_blank'>
+      OGC® Open Geospatial APIs - White Paper
+    </a>),</li>
+    <li>notamment documenté par des documents Open API
+      et donc plus facile à utiliser par les développeurs ne connaissant pas WFS,</li> 
+  </ul></li>
+  <li>la possibilité de consulter les données des serveurs en Html en naviguant simplement dans les serveurs,</li>
+  <li>la possibilité d'utiliser des URL pour désigner une collection ou un objet, par exemples:<ul>
+    <li><a href='https://igngp.geoapi.fr/fts.php/administratif/collections/ADMINEXPRESS-COG-CARTO.LATEST:region'>
+      https://igngp.geoapi.fr/fts.php/administratif/collections/ADMINEXPRESS-COG-CARTO.LATEST:region</a>
+      pour la collection des régions d'ADMIN-EXPRESS COG CARTO,</li>
+    <li><a href='https://igngp.geoapi.fr/fts.php/administratif/collections/ADMINEXPRESS-COG-CARTO.LATEST:region/items/region.1'>
+      https://igngp.geoapi.fr/fts.php/administratif/collections/ADMINEXPRESS-COG-CARTO.LATEST:region/items/region.1</a>
+      pour la région identifiée par 'region.1' dans la collection précédente,</li>
+  </ul>
+  <li>l'ajout (en cours) de documentation accessible dans QGis, principalement<ul>
+    <li>des titres de collections plus clairs et plus courts que ceux utilisés par l'IGN,</li>
+    <li>un résumé de la collection accessible dans QGis reprenant des éléments de spécification des données.</li>
+</ol>
+
+Les différents serveurs sont accessibles à l'adresse <a href='fts.php'>https://igngp.geoapi.fr/fts.php</a>
 
 
 <a id='cu'></a>
@@ -90,6 +121,7 @@ devra s’acquitter d’une redevance
 selon les <a href='https://geoservices.ign.fr/cgu-licences' target='_blank'>conditions générales d’utilisation</a> (CGU).
 </table><br>
 
-De plus, ce site est un prototype et aucune garantie de performance ou de continuité de service n'est proposée.</p>
+De plus, <b>ATTENTION, ce site est un prototype et ne bénéficie d'aucune garantie de performance
+  ou de continuité de service</b>.</p>
 
 Pour plus d'informations sur ce site, vous pouvez contacter <a href='mailto:contact@geoapi.fr'>Benoit DAVID</a>.
