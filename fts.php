@@ -62,9 +62,9 @@ $doc = new Doc([
     $theme => [
       'title'=> $configTheme['title'],
       'abstract'=> $configTheme['abstract'],
-      'conformsTo'=> $configTheme['conformsTo'],
       'path'=> "/wfs/wxs.ign.fr/$theme/geoportail/wfs",
-    ],
+    ]
+    + (isset($configTheme['conformsTo']) ? ['conformsTo'=> $configTheme['conformsTo']] : []),
   ],
 ]);
 
