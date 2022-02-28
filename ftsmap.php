@@ -16,7 +16,7 @@ require_once __DIR__.'/config.inc.php';
 
 use Symfony\Component\Yaml\Yaml;
 
-$baseFtsUrl = 'http://localhost/geoapi/igngp/fts.php';
+$baseFtsUrl = (($_SERVER['HTTP_HOST']=='localhost')? 'http://localhost/geoapi/igngp' : 'https://igngp.geoapi.fr') . '/fts.php';
 
 //echo '<pre>$_SERVER='; print_r($_SERVER); echo "</pre>\n";
 
@@ -44,24 +44,49 @@ if (preg_match('!^/([^/]+)/([^/]+)$!', $_SERVER['PATH_INFO'], $matches)) { // /{
   $thid = $matches[1];
   $collId = $matches[2];
   $startindex = $_GET['startindex'] ?? 0;
+  $limit = $_GET['limit'] ?? 10;
   $properties = $_GET['properties'] ?? null;
-  $path = "$baseFtsUrl/$thid/collections/$collId/items?startindex=$startindex"
-    .($properties ? "&properties=$properties" : '');
-  $items = file_get_contents($path);
-  //echo "<pre>$items";
-  $items = json_decode($items, true);
-  //echo '<pre>$items='; print_r($items);
-  echo "<ul>\n";
-  foreach ($items['features'] as $feature) {
-    $bbox = $feature['bbox'];
-    echo "<li><a href='$_SERVER[SCRIPT_NAME]/$thid/$collId/$feature[id]/map/",implode(',',$bbox),"'>",
-      json_encode($feature['properties'],  JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE),"</a></li>\n";
+  $params = '';
+  foreach ($_GET as $k=>$v) {
+    if ($v !== '')
+      $params .= ($params?'&':'')."$k=$v";
   }
-  echo "</ul>\n";
-  $next = $startindex+10;
+  $path = "$baseFtsUrl/$thid/collections/$collId/items?$params";
+  //echo "path=$path<br>\n";
+  if (1) {
+    $items = file_get_contents($path);
+  }
+  else {
+    $items = file_get_contents(__DIR__.'/items-eg.json');
+  }
+  $items = json_decode($items, true);
+  //echo '<pre>',Yaml::dump($items),"</pre>\n";
+  $properties = $items['features'] ? array_keys($items['features'][0]['properties']) : [];
+  // formulaire de modification des paramètres
+  echo "<table border=1><form>";
+  echo "<tr><td>startindex</td><td><input type='text' name ='startindex' value='$startindex'>\n";
+  echo "<tr><td>limit</td><td><input type='text' name ='limit' value='$limit'>\n";
+  echo "<tr><td>properties</td><td><input type='text' name ='properties' value='",implode(',',$properties),"'>\n";
+  foreach ($properties as $prop)
+    echo "<tr><td>$prop</td><td><input type='text' name ='$prop' value='",$_GET[$prop] ?? '',"'>\n";
+  echo "<tr><td colspan=2><center><input type='submit'></center></td></tr>\n";
+  echo "</table>\n";
+  echo "numberReturned=$items[numberReturned] / numberMatched=$items[numberMatched]<br>\n";
+  echo "<table border=1>\n";
+  foreach ($items['features'] as $i => $feature) {
+    if ($i == 0)
+      echo "<th>",implode('</th><th>', array_keys($feature['properties'])),"</th>\n";
+    $href = "$_SERVER[SCRIPT_NAME]/$thid/$collId/$feature[id]/map/".implode(',', $feature['bbox']);
+    echo "<tr><td><a href='$href'>",implode('</td><td>', $feature['properties']),"</a></td></tr>\n";
+  }
+  echo "</table>\n";
+  $next = $startindex+$limit;
   echo "<a href='$_SERVER[SCRIPT_NAME]/$thid/$collId/map?startindex=$startindex'>map</a><br>\n";
-  echo "<a href='$_SERVER[SCRIPT_NAME]/$thid/$collId?startindex=$next",
-    $properties ? "&amp;properties=$properties" : '',"'>next</a><br>\n";
+  echo "<a href='$_SERVER[SCRIPT_NAME]/$thid/$collId?startindex=$next";
+  foreach ($_GET as $k => $v)
+    if (($k <> 'startindex') && ($v <> ''))
+      echo "&amp;$k=$v";
+  echo "'>next</a><br>\n";
   die();
 }
 
