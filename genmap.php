@@ -1,10 +1,12 @@
 <?php
 /*PhpDoc:
 name:  genmap.php
-title: genmap.php - génération de la carte
+title: genmap.php - génération de la carte pour tile.php (PERIME)
 functions:
 doc: |
 journal: |
+  1/3/2022:
+    périme, remplacé par tilemap.php et tilemap.yaml
   18-20/2/2022:
     passage en version 2
     transformation en script

@@ -71,7 +71,7 @@ soit en couche de base soit en couche superposée (overlay).<br>
 Cette co-visualisation fournit par la même occasion un exemple simple de carte Leaflet utilisant les couches.<br>
 Consulter les <a href='index.html#cu'>conditions d'utilisation</a><br>
 
-<form action='genmap.php'><table border=1><th>nom</th><th>titre</th><th>off/base/overlay</th>
+<form action='tilemap.php'><table border=1><th>nom</th><th>titre</th><th>off/base/overlay</th>
 
 EOT;
 

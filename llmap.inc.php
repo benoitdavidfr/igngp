@@ -85,8 +85,12 @@ class LLMap {
     echo "  <!-- styles nécessaires pour le mobile -->\n";
     echo "  <link rel='stylesheet' href='https://geoapi.fr/shomgt/leaflet/llmap.css'>\n";
     echo "  <!-- styles et src de Leaflet -->\n";
-    echo "  <link rel='stylesheet' href='https://geoapi.fr/shomgt/leaflet/leaflet.css'/>\n";
-    echo "  <script src='https://geoapi.fr/shomgt/leaflet/leaflet.js'></script>\n";
+    echo "  <link rel='stylesheet' href='https://unpkg.com/leaflet@1.7.1/dist/leaflet.css'",
+      " integrity='sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=='",
+      " crossorigin='' />\n";
+    echo "  <script src='https://unpkg.com/leaflet@1.7.1/dist/leaflet.js'",
+      " integrity='sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=='",
+      " crossorigin=''></script>\n";
     foreach ($head['plugIns'] as $plugIn) {
       self::plugInInclude($plugIn);
     }
@@ -137,7 +141,7 @@ class LLMap {
     echo "<body>\n";
     echo "  <div id='map' style='height: 100%; width: 100%'></div>\n";
     echo "  <script>\n";
-    echo $body['jsFunctions'],"\n";
+    echo $body['jsFunctions'] ?? '',"\n";
     self::setview($body['view'], $vars);
     echo "L.control.scale({position:'bottomleft', metric:true, imperial:false}).addTo(map);\n\n";
     foreach ($body['plugInActivation'] as $plugIn) {
@@ -161,10 +165,11 @@ class LLMap {
     echo "</html>\n";
   }
   
-  static function genPhp(string $fileName, array $vars): void {
+  static function genPhp(string|array $mapDef, array $vars=[]): void {
     self::$wk = Yaml::parseFile(__DIR__.'/llmap.yaml');
-    $def = Yaml::parseFile($fileName);
-    self::head($def['head'], $vars);
-    self::body($def['body'], $vars);
+    if (is_string($mapDef))
+      $mapDef = Yaml::parseFile($mapDef);
+    self::head($mapDef['head'], $vars);
+    self::body($mapDef['body'], $vars);
   }
 };
