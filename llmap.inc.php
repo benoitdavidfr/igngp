@@ -3,7 +3,12 @@
 name: llmap.inc.php
 title: llmap.inc.php - module de transformation d'une description Yaml en code Php
 doc: |
-  La description Yaml doit être conforme au schéma llmap.schema.yaml
+  Une carte est définie par un document Yaml conforme au schéma llmap.schema.yaml.
+  La méthode LLMap::genPhp() transforme une telle définition en code Php/Html/JavaScript
+  Le fichier llmap.yaml contient des éléments biens connus qui peuvent être réutilisés dans les définitions
+  au moyen de références JSON.
+  Les cartes peuvent être paramétrées par des variables Php en incluant dans le fichier Yaml l'affichage de ces variables ;
+  les valeurs asssociées à ces variables sont définies dans la variable $vars.
 journal: |
   1/3/2022:
     - création
@@ -33,7 +38,7 @@ class JsonRef {
 class LLMap {
   static $wk; // éléments biens connus issus du fichier llmap.yaml
   
-  // fonction récursive replacant les dans les chaines les variables Php par leur valeur
+  // fonction récursive remplacant dans les chaines les variables Php par leur valeur
   static function replacePhpVars(string|array $srce, array $vars): string|array {
     if (is_array($srce)) {
       $result = [];
@@ -156,7 +161,7 @@ class LLMap {
     echo "</html>\n";
   }
   
-  static function show(string $fileName, array $vars): void {
+  static function genPhp(string $fileName, array $vars): void {
     self::$wk = Yaml::parseFile(__DIR__.'/llmap.yaml');
     $def = Yaml::parseFile($fileName);
     self::head($def['head'], $vars);

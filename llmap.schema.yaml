@@ -61,9 +61,13 @@ definitions:
             $ref: '#/definitions/jsonRef'
 type: object
 additionalProperties: false
+required: [title, $schema, head, body]
 properties:
   title:
     description: titre du document
+    type: string
+  abstract:
+    description: résumé du document
     type: string
   $schema:
     description: schema JSON du document
@@ -73,8 +77,10 @@ properties:
       - description: référence vers un fichier séparé
         type: string
   head:
+    description: éléments générés dans la partie head du document html
     type: object
     additionalProperties: false
+    required: [title]
     properties:
       title:
         description: titre de la carte
@@ -89,6 +95,7 @@ properties:
             - description: référence JSON au code d'inclusion d'un plugIn dans les constantes
               $ref: '#/definitions/jsonRef'
   body:
+    description: éléments générés dans la partie body du document html
     type: object
     additionalProperties: false
     required: [view, baseLayers, defaultBaseLayer]
@@ -139,6 +146,7 @@ properties:
         $ref: '#/definitions/lyrDict'
       defaultBaseLayer:
         description: clé de la couche utilisée par défaut
+        type: string
       overlays:
         description: dict. des couches superposables indexées par leur nom
         $ref: '#/definitions/lyrDict'

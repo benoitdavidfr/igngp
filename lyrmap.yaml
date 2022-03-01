@@ -1,4 +1,10 @@
 title: carte Leaflet affichant une couche ftsmap
+abstract: |
+  Cette définition est paramétrée par 4 variables:
+    $title: le titre de la carte
+    $collId: identifiant de la collection
+    $collUrl: URL de la couche AJAX
+    $collUrl0: URL de la couche UGeoJSON
 $schema: llmap
 head:
   title: "<?php echo $title;?>"

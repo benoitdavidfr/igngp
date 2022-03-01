@@ -120,7 +120,7 @@ if (preg_match('!^/([^/]+)/([^/]+)/map$!', $_SERVER['PATH_INFO'], $matches)) { /
   $thid = $matches[1];
   $collId = $matches[2];
   $startindex = $_GET['startindex'] ?? 0;
-  LLMap::show(
+  LLMap::genPhp(
     __DIR__.'/lyrmap.yaml',
     [
       'title'=> "carte $_SERVER[PATH_INFO]",
@@ -141,7 +141,7 @@ if (preg_match('!^/([^/]+)/([^/]+)/([^/]+)/map/([-\d,.]+)$!', $_SERVER['PATH_INF
   $center = json_encode([$center[1],$center[0]]);
   $zoom = \gegeom\Zoom::zoomForGBoxSize($bbox->size());
   $itemUrl = "$baseFtsUrl/$thid/collections/$collId/items/$itemId";
-  LLMap::show(
+  LLMap::genPhp(
     __DIR__.'/itemmap.yaml',
     [
       'title'=> "carte $_SERVER[PATH_INFO]",
