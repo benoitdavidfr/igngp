@@ -31,7 +31,7 @@ class JsonRef {
 };
 
 class LLMap {
-  static $constants; // le fichier llmap.yaml avec les éléments bien connus
+  static $wk; // éléments biens connus issus du fichier llmap.yaml
   
   // fonction récursive replacant les dans les chaines les variables Php par leur valeur
   static function replacePhpVars(string|array $srce, array $vars): string|array {
@@ -61,14 +61,14 @@ class LLMap {
     if (is_string($plugIn))
       echo $plugIn;
     else
-      echo JsonRef::deref($plugIn, self::$constants);
+      echo JsonRef::deref($plugIn, self::$wk);
   }
 
   private static function plugInActivation(array|string $plugIn): void {
     if (is_string($plugIn))
       echo '  ',str_replace("\n","\n  ",$plugIn);
     else
-      echo JsonRef::deref($plugIn, self::$constants);
+      echo JsonRef::deref($plugIn, self::$wk);
   }
   
   private static function head(array $head, array $vars): void {
@@ -88,8 +88,18 @@ class LLMap {
     echo "</head>\n";
   }
   
-  private static function setview(array $view): void {
-    echo "var map = L.map('map').setView(",json_encode($view['latLon']),",$view[zoom]);  // view pour la zone\n";
+  private static function setview(array $view, array $vars): void {
+    if (isset($view['$ref']))
+      $view = JsonRef::deref($view, self::$wk);
+    if (is_array($view['latLon']))
+      $latLon = json_encode($view['latLon']);
+    else
+      $latLon = self::replacePhpVars($view['latLon'], $vars);
+    if (is_int($view['zoom']))
+      $zoom = $view['zoom'];
+    else
+      $zoom = self::replacePhpVars($view['zoom'], $vars);
+    echo "var map = L.map('map').setView($latLon,$zoom);  // view pour la zone\n";
   }
   
   private static function layerParams(array $params, array $vars): void {
@@ -110,7 +120,7 @@ class LLMap {
   
   private static function layer(string $lyrid, array $layer, array $vars): void {
     if (isset($layer['$ref'])) {
-      $layer = JsonRef::deref($layer, self::$constants);
+      $layer = JsonRef::deref($layer, self::$wk);
     }
     $lyrid = self::replacePhpVars($lyrid, $vars);
     echo "  '$lyrid': new $layer[type](\n";
@@ -123,7 +133,7 @@ class LLMap {
     echo "  <div id='map' style='height: 100%; width: 100%'></div>\n";
     echo "  <script>\n";
     echo $body['jsFunctions'],"\n";
-    self::setview($body['view']);
+    self::setview($body['view'], $vars);
     echo "L.control.scale({position:'bottomleft', metric:true, imperial:false}).addTo(map);\n\n";
     foreach ($body['plugInActivation'] as $plugIn) {
       self::plugInActivation($plugIn);
@@ -138,6 +148,8 @@ class LLMap {
     foreach ($body['overlays'] as $lyrid => $layer)
       self::layer($lyrid, $layer, $vars);
     echo "};\n";
+    foreach ($body['addLayers'] ?? [] as $lyrId)
+      echo "map.addLayer(overlays['$lyrId']);\n";
     echo "L.control.layers(baseLayers, overlays).addTo(map);\n";
     echo "    </script>\n";
     echo "  </body>\n";
@@ -145,7 +157,7 @@ class LLMap {
   }
   
   static function show(string $fileName, array $vars): void {
-    self::$constants = Yaml::parseFile(__DIR__.'/llmap.yaml');
+    self::$wk = Yaml::parseFile(__DIR__.'/llmap.yaml');
     $def = Yaml::parseFile($fileName);
     self::head($def['head'], $vars);
     self::body($def['body'], $vars);

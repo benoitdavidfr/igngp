@@ -91,25 +91,40 @@ properties:
   body:
     type: object
     additionalProperties: false
+    required: [view, baseLayers, defaultBaseLayer]
     properties:
       jsFunctions:
         description: code JS des fonctions utiles
         type: string
       view:
         description: définition de la zone d'affichage initiale
-        type: object
-        additionalProperties: false
-        properties:
-          latLon:
-            description: couple latitude, longitude du centre
-            type: array
-            maxItems: 2
-            minItems: 2
-            items:
-              type: number
-          zoom:
-            description: niveau de zoom
-            type: integer
+        oneOf:
+          - description: définition par des constantes ou des variables
+            type: object
+            additionalProperties: false
+            properties:
+              latLon:
+                description: centre de la zone soit comme couple latitude, longitude soit provenant de la var. $center
+                oneOf:
+                  - description: couple latitude, longitude du centre
+                    type: array
+                    maxItems: 2
+                    minItems: 2
+                    items:
+                      type: number
+                  - description: utilisation de la variable $center contenant le couple en JSON
+                    type: string
+                    pattern: '<\?php echo \$center;\?>'
+              zoom:
+                description: niveau de zoom soit comme entier soit provenant de la var. $zoom
+                oneOf:
+                  - description: niveau de zoom
+                    type: integer
+                  - description: utilisation de la variable $zoom contenant l'entier
+                    type: string
+                    pattern: '<\?php echo \$zoom;\?>'
+          - description: référence à une vue bien connue
+            $ref: '#/definitions/jsonRef'
       plugInActivation:
         description: liste de codes d'activation des plug-ins
         type: array
@@ -127,3 +142,8 @@ properties:
       overlays:
         description: dict. des couches superposables indexées par leur nom
         $ref: '#/definitions/lyrDict'
+      addLayers:
+        description: liste des couches superposées initialement affichées
+        type: array
+        items:
+          type: string

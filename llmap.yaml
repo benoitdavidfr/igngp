@@ -1,4 +1,4 @@
-title: Fichier de référence de LLMap contenant les éléemnts biens connus
+title: Eléments biens connus utilisés pour définir des cartes LLMap
 $schema:
   $id: https://igngp.geoapi.fr/llmap.yaml#/schema
   type: object
@@ -33,6 +33,24 @@ $schema:
     layers:
       description: Dictionnaire des couches biens connues
       $ref: /var/www/html/geoapi/igngp/llmap.schema.yaml#/definitions/lyrDict
+    views:
+      description: Dictionnaire de vues bien connues
+      type: object
+      additionalProperties: false
+      patternProperties:
+        ^[-a-zA-Z0-9.]+$:
+          type: object
+          additionalProperties: false
+          required: [latLon, zoom]
+          properties:
+            latLon:
+              type: array
+              maxItems: 2
+              minItems: 2
+              items:
+                type: number
+            zoom:
+              type: integer
     eof:
       type: 'null'
 plugIns:
@@ -94,4 +112,8 @@ layers:
     params:
       - 'http://visu.gexplor.fr/utilityserver.php/debug/{z}/{x}/{y}.png'
       - {"format": "image/png","minZoom": 0,"maxZoom": 21,"detectRetina": false}
+views:
+  metropole:
+    latLon: [46.5, 3]
+    zoom: 6
 eof:
