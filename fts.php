@@ -7,18 +7,20 @@ doc: |
   Définition d'une page d'accueil spécifique avec la liste des thèmes du Géoportail
   Cette liste est stockée dans le fichier de config
 journal: |
+  1/3/2022:
+    - utilisation de la fonction fts()
   18/2/2022:
     - création
 includes:
-  - fts.php
-  - ftrserver.inc.php
-  - doc.php
-  - ../../phplib/sqlschema.inc.php
+  - ../../geovect/features/fts.php
+  - config.inc.php
+  //- ../../phplib/sqlschema.inc.php
 */
 require_once __DIR__.'/vendor/autoload.php';
-require_once __DIR__.'/../../phplib/sqlschema.inc.php';
-require_once __DIR__.'/../../geovect/features/ftrserver.inc.php';
-require_once __DIR__.'/../../geovect/features/doc.php';
+//require_once __DIR__.'/../../phplib/sqlschema.inc.php';
+require_once __DIR__.'/../../geovect/features/fts.php';
+//require_once __DIR__.'/../../geovect/features/ftrserver.inc.php';
+//require_once __DIR__.'/../../geovect/features/doc.php';
 require_once __DIR__.'/config.inc.php';
 
 use Symfony\Component\Yaml\Yaml;
@@ -68,4 +70,4 @@ $doc = new Doc([
   ],
 ]);
 
-require __DIR__.'/../../geovect/features/fts.php';
+fts($_SERVER['PATH_INFO'], $doc);
