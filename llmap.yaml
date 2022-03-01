@@ -1,0 +1,45 @@
+title: Fichier de référence de LLMap contenant les constantes
+$schema:
+  $id: https://igngp.geoapi.fr/llmap.yaml#/schema
+  type: object
+  additionalProperties: false
+  properties:
+    title:
+      type: string
+    $schema:
+      description: schéma de ce document
+      $ref: http://json-schema.org/schema#
+    plugIns:
+      description: Dict. des plug-ins biens connus
+      type: object
+      additionalProperties: false
+      patternProperties:
+        ^[-a-zA-Z0-9.]+$:
+          type: object
+          additionalProperties: false
+          properties:
+            include:
+              description: code d'inclusion du plug-in à inclure dans l'en-tête du fichier Html
+              type: string
+            activation:
+              description: code JS d'activation du plug-in
+              type: string
+    eof:
+      type: 'null'
+plugIns:
+  Control.Coordinates:
+    include: |
+      <!-- Include the Control.Coordinates plugin -->
+      <link rel='stylesheet' href='https://geoapi.fr/shomgt/leaflet/Control.Coordinates.css'>
+      <script src='https://geoapi.fr/shomgt/leaflet/Control.Coordinates.js'></script>
+    activation: |
+      // activation du plug-in Control.Coordinates
+      var c = new L.Control.Coordinates();
+      c.addTo(map);
+      map.on('click', function(e) { c.setCoordinates(e); });
+  edgebuffer:
+    include: |
+      <!-- Include the edgebuffer plugin -->
+      <script src="https://geoapi.fr/shomgt/leaflet/leaflet.edgebuffer.js"></script>
+
+eof:

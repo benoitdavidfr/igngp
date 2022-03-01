@@ -214,13 +214,15 @@ if (preg_match('!^/([^/]+)/([^/]+)/map$!', $_SERVER['PATH_INFO'], $matches)) { /
   $thid = $matches[1];
   $collId = $matches[2];
   $startindex = $_GET['startindex'] ?? 0;
-  $llmap = new LLMap(__DIR__.'/lyrmap.yaml');
-  $llmap->show([
-    'title'=> "carte $_SERVER[PATH_INFO]",
-    'collId'=> $collId,
-    'collUrl'=> "$baseFtsUrl/$thid/collections/$collId/items?startindex=$startindex",
-    'collUrl0'=> "$baseFtsUrl/$thid/collections/$collId/items",
-  ]);
+  LLMap::show(
+    __DIR__.'/lyrmap.yaml',
+    [
+      'title'=> "carte $_SERVER[PATH_INFO]",
+      'collId'=> $collId,
+      'collUrl'=> "$baseFtsUrl/$thid/collections/$collId/items?startindex=$startindex",
+      'collUrl0'=> "$baseFtsUrl/$thid/collections/$collId/items",
+    ]
+  );
   die();
 }
 

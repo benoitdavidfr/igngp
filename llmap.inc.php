@@ -1,20 +1,37 @@
 <?php
+/*PhpDoc:
+name: llmap.inc.php
+title: llmap.inc.php - module de transformation d'une description Yaml en code Php
+doc: |
+  La description Yaml doit être conforme au schéma llmap.schema.yaml
+journal: |
+  1/3/2022:
+    - création
+*/
 require_once __DIR__.'/vendor/autoload.php';
 use Symfony\Component\Yaml\Yaml;
 
-class LLMap {
-  protected string $fileName;
-  
-  function __construct(string $fileName) {
-    $this->fileName = $fileName;
-  }
-  
-  function show0(array $vars): void {
-    foreach ($vars as $k => $v) {
-      $$k = $v;
+class JsonRef {
+  static function deref(array $ref, array $val): string {
+    //echo $ref['$ref'];
+    $ref = $ref['$ref'];
+    $pos = strpos($ref, '#');
+    //echo "pos=$pos\n";
+    $ref = substr($ref, $pos+2);
+    //echo "ref=$ref\n";
+    $ref = explode('/', $ref);
+    //print_r($ref);
+    foreach ($ref as $key) {
+      if (!isset($val[$key]))
+        throw new Exception ("Erreur deref sur $key");
+      $val = $val[$key];
     }
-    require 'lyrmap.inc.php';
+    return $val;
   }
+};
+
+class LLMap {
+  static $constants;
   
   // fonction récursive replacant les dans les chaines les variables Php par leur valeur
   static function replacePhpVars(string|array $srce, array $vars): string|array {
@@ -40,7 +57,21 @@ class LLMap {
     }
   }
   
-  private function head(array $head, array $vars): void {
+  private static function plugInInclude(array|string $plugIn): void {
+    if (is_string($plugIn))
+      echo $plugIn;
+    else
+      echo JsonRef::deref($plugIn, self::$constants);
+  }
+
+  private static function plugInActivation(array|string $plugIn): void {
+    if (is_string($plugIn))
+      echo '  ',str_replace("\n","\n  ",$plugIn);
+    else
+      echo JsonRef::deref($plugIn, self::$constants);
+  }
+  
+  private static function head(array $head, array $vars): void {
     echo "<!DOCTYPE HTML><html><head>\n";
     echo '  <title>',self::replacePhpVars($head['title'], $vars),"</title>\n";
     echo "  <meta charset='UTF-8'>\n";
@@ -51,15 +82,17 @@ class LLMap {
     echo "  <!-- styles et src de Leaflet -->\n";
     echo "  <link rel='stylesheet' href='https://geoapi.fr/shomgt/leaflet/leaflet.css'/>\n";
     echo "  <script src='https://geoapi.fr/shomgt/leaflet/leaflet.js'></script>\n";
-    echo '  ',str_replace("\n","\n  ",$head['plugIns']);
+    foreach ($head['plugIns'] as $plugIn) {
+      self::plugInInclude($plugIn);
+    }
     echo "</head>\n";
   }
   
-  private function setview(array $view): void {
+  private static function setview(array $view): void {
     echo "var map = L.map('map').setView(",json_encode($view['latLon']),",$view[zoom]);  // view pour la zone\n";
   }
   
-  private function layerParams(array $params, array $vars): void {
+  private static function layerParams(array $params, array $vars): void {
     foreach ($params as $i => $param) {
       echo $i ? ",\n" : '';
       if (is_string($param)) {
@@ -75,30 +108,32 @@ class LLMap {
     echo "\n";
   }
   
-  private function layer(string $lyrid, array $layer, array $vars): void {
+  private static function layer(string $lyrid, array $layer, array $vars): void {
     $lyrid = self::replacePhpVars($lyrid, $vars);
     echo "  '$lyrid': new $layer[type](\n";
-    $this->layerParams($layer['params'], $vars);
+    self::layerParams($layer['params'], $vars);
     echo "  ),\n";
   }
   
-  private function body(array $body, array $vars) {
+  private static function body(array $body, array $vars) {
     echo "<body>\n";
     echo "  <div id='map' style='height: 100%; width: 100%'></div>\n";
     echo "  <script>\n";
     echo $body['jsFunctions'],"\n";
-    $this->setview($body['view']);
+    self::setview($body['view']);
     echo "L.control.scale({position:'bottomleft', metric:true, imperial:false}).addTo(map);\n\n";
-    echo $body['plugInActivation'],"\n";
+    foreach ($body['plugInActivation'] as $plugIn) {
+      self::plugInActivation($plugIn);
+    }
     
     echo "var baseLayers = {\n";
     foreach ($body['baseLayers'] as $lyrid => $layer)
-      $this->layer($lyrid, $layer, $vars);
+      self::layer($lyrid, $layer, $vars);
     echo "};\n";
     echo "map.addLayer(baseLayers['$body[defaultBaseLayer]']);\n\n";
     echo "var overlays = {\n";
     foreach ($body['overlays'] as $lyrid => $layer)
-      $this->layer($lyrid, $layer, $vars);
+      self::layer($lyrid, $layer, $vars);
     echo "};\n";
     echo "L.control.layers(baseLayers, overlays).addTo(map);\n";
     echo "    </script>\n";
@@ -106,9 +141,10 @@ class LLMap {
     echo "</html>\n";
   }
   
-  function show(array $vars): void {
-    $def = Yaml::parseFile($this->fileName);
-    $this->head($def['head'], $vars);
-    $this->body($def['body'], $vars);
+  static function show(string $fileName, array $vars): void {
+    self::$constants = Yaml::parseFile(__DIR__.'/llmap.yaml');
+    $def = Yaml::parseFile($fileName);
+    self::head($def['head'], $vars);
+    self::body($def['body'], $vars);
   }
 };

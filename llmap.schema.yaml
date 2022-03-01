@@ -1,0 +1,125 @@
+title: Schema JSON d'une carte Leaflet
+description: |
+  Ce schéma décrit une carte Leaflet qui sera transformé en Php par llmap.inc.php
+$id: https://igngp.geoapi.fr/llmap.schema.yaml
+$schema: http://json-schema.org/schema#
+definitions:
+  jsonType:
+    description: type JSON
+    oneOf:
+      - type: string
+      - type: number 
+      - type: boolean
+      - description: objet JSON
+        type: object
+        additionalProperties: false
+        patternProperties:
+          ^[-a-zA-Z0-9_+$]+$:
+            description: valeur
+            $ref: '#/definitions/jsonType'
+  jsonRef:
+    description: Référence JSON
+    type: object
+    additionalProperties: false
+    required: [$ref]
+    properties:
+      $ref:
+        type: string
+  layer:
+    description: description d'une couche
+    type: object
+    additionalProperties: false
+    properties:
+      title:
+        description: nom de la couche dans la carte
+        type: string
+      type:
+        description: type de couche
+        type: string
+        enum:
+          - L.TileLayer
+          - L.GeoJSON.AJAX
+          - L.UGeoJSONLayer
+      params:
+        description: |
+          paramètres d'initialisation de la couche sous la forme d'une liste.
+          Un nom de fonction JS est codé par un objet {'$function': 'nom'} pour le distinguer d'une chaine de caractères
+        type: array
+        items:
+          $ref: '#/definitions/jsonType'
+  lyrDict:
+    description: dictionnaire de couches indexées par leur nom
+    type: object
+    additionalProperties: false
+    patternProperties:
+      ^[-a-zA-Z0-9 _+<>?;$]+$:
+        description: définition de la couche
+        $ref: '#/definitions/layer'
+type: object
+additionalProperties: false
+properties:
+  title:
+    description: titre du document
+    type: string
+  $schema:
+    description: schema JSON du document
+    oneOf:
+      - description: schema in-line
+        $ref: http://json-schema.org/schema#
+      - description: référence vers un fichier séparé
+        type: string
+  head:
+    type: object
+    additionalProperties: false
+    properties:
+      title:
+        description: titre de la carte
+        type: string
+      plugIns:
+        description: liste de codes JS d'inclusion des plugIns
+        type: array
+        items:
+          oneOf:
+            - description: code JS d'inclusion d'un plugIn
+              type: string
+            - description: référence JSON au code d'inclusion d'un plugIn dans les constantes
+              $ref: '#/definitions/jsonRef'
+  body:
+    type: object
+    additionalProperties: false
+    properties:
+      jsFunctions:
+        description: code JS des fonctions utiles
+        type: string
+      view:
+        description: définition de la zone d'affichage initiale
+        type: object
+        additionalProperties: false
+        properties:
+          latLon:
+            description: couple latitude, longitude du centre
+            type: array
+            maxItems: 2
+            minItems: 2
+            items:
+              type: number
+          zoom:
+            description: niveau de zoom
+            type: integer
+      plugInActivation:
+        description: liste de codes d'activation des plug-ins
+        type: array
+        items:
+          oneOf:
+            - description: code JS d'activation d'un plugIn
+              type: string
+            - description: référence JSON au code JS d'activation d'un plugIn dans les constantes
+              $ref: '#/definitions/jsonRef'
+      baseLayers:
+        description: dict. des couches de base indexées par leur nom
+        $ref: '#/definitions/lyrDict'
+      defaultBaseLayer:
+        description: clé de la couche utilisée par défaut
+      overlays:
+        description: dict. des couches superposables indexées par leur nom
+        $ref: '#/definitions/lyrDict'

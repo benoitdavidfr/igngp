@@ -1,113 +1,20 @@
 title: carte Leaflet affichant une couche ftsmap
-$schema:
-  $id: https://igngp.geoapi.fr/lyrmap.yaml#/$schema
-  definitions:
-    
-    jsonType:
-      description: type JSON
-      oneOf:
-        - type: string
-        - type: number 
-        - type: boolean
-        - description: objet JSON
-          type: object
-          additionalProperties: false
-          patternProperties:
-            ^[-a-zA-Z0-9_+$]+$:
-              description: valeur
-              $ref: '#/definitions/jsonType'
-    layer:
-      description: description d'une couche
-      type: object
-      additionalProperties: false
-      properties:
-        title:
-          description: nom de la couche dans la carte
-          type: string
-        type:
-          description: type de couche
-          type: string
-          enum:
-            - L.TileLayer
-            - L.GeoJSON.AJAX
-            - L.UGeoJSONLayer
-        params:
-          description: paramètres d'initialisation de la couche sous la forme d'une liste
-          type: array
-          items:
-            $ref: '#/definitions/jsonType'
-    lyrDict:
-      description: dictionnaire de couches indexées par leur nom
-      type: object
-      additionalProperties: false
-      patternProperties:
-        ^[-a-zA-Z0-9 _+<>?;$]+$:
-          description: définition de la couche
-          $ref: '#/definitions/layer'
-  type: object
-  additionalProperties: false
-  properties:
-    title:
-      description: titre du document
-      type: string
-    $schema:
-      $ref: http://json-schema.org/schema#
-    head:
-      type: object
-      additionalProperties: false
-      properties:
-        title:
-          description: titre de la carte
-          type: string
-        plugIns:
-          description: code JS d'inclusion des plugIns
-          type: string
-    body:
-      type: object
-      additionalProperties: false
-      properties:
-        jsFunctions:
-          description: code JS des fonctions utiles
-          type: string
-        view:
-          description: définition de la zone d'affichage initiale
-          type: object
-          additionalProperties: false
-          properties:
-            latLon:
-              description: couple latitude, longitude du centre
-              type: array
-              maxItems: 2
-              minItems: 2
-              items:
-                type: number
-            zoom:
-              description: niveau de zoom
-              type: integer
-        plugInActivation:
-          description: code JS dactivation des plug-ins
-          type: string
-        baseLayers:
-          description: dict. des couches de base indexées par leur nom
-          $ref: '#/definitions/lyrDict'
-        defaultBaseLayer:
-          description: clé de la couche utilisée par défaut
-        overlays:
-          description: dict. des couches superposables indexées par leur nom
-          $ref: '#/definitions/lyrDict'
-
+$schema: llmap
 head:
   title: "<?php echo $title;?>"
-  plugIns: |
-    <!-- Include the edgebuffer plugin -->
-    <script src="https://geoapi.fr/shomgt/leaflet/leaflet.edgebuffer.js"></script>
-    <!-- Include the Control.Coordinates plugin -->
-    <link rel='stylesheet' href='https://geoapi.fr/shomgt/leaflet/Control.Coordinates.css'>
-    <script src='https://geoapi.fr/shomgt/leaflet/Control.Coordinates.js'></script>
-    <!-- Include the uGeoJSON plugin -->
-    <script src="https://geoapi.fr/shomgt/leaflet/leaflet.uGeoJSON.js"></script>
-    <!-- plug-in d'appel des GeoJSON en AJAX -->
-    <script src='https://geoapi.fr/shomgt/leaflet/leaflet-ajax.js'></script>
+  plugIns:
+    - {$ref: llmap.yaml#/plugIns/Control.Coordinates/include}
+    - {$ref: llmap.yaml#/plugIns/edgebuffer/include}
+    - |
+      <!-- Include the Control.Coordinates plugin -->
+      <link rel='stylesheet' href='https://geoapi.fr/shomgt/leaflet/Control.Coordinates.css'>
+      <script src='https://geoapi.fr/shomgt/leaflet/Control.Coordinates.js'></script>
+    - |
+      <!-- Include the uGeoJSON plugin -->
+      <script src="https://geoapi.fr/shomgt/leaflet/leaflet.uGeoJSON.js"></script>
+    - |
+      <!-- plug-in d'appel des GeoJSON en AJAX -->
+      <script src='https://geoapi.fr/shomgt/leaflet/leaflet-ajax.js'></script>
 body:
   jsFunctions: |
     // affichage des caractéristiques de chaque feature
@@ -119,13 +26,10 @@ body:
       layer.bindTooltip(feature.id);
     }
   view:
-    latLon: [46.5,3]
+    latLon: [46.5, 3]
     zoom: 6
-  plugInActivation: |
-    // activation du plug-in Control.Coordinates
-    var c = new L.Control.Coordinates();
-    c.addTo(map);
-    map.on('click', function(e) { c.setCoordinates(e); });
+  plugInActivation:
+    - {$ref: llmap.yaml#/plugIns/Control.Coordinates/activation}
   baseLayers:
     Plan IGN:
       type: L.TileLayer
@@ -168,4 +72,4 @@ body:
       type: L.TileLayer
       params:
         - 'http://visu.gexplor.fr/utilityserver.php/debug/{z}/{x}/{y}.png'
-        - {"format":"image/png","minZoom":0,"maxZoom":21,"detectRetina":false}
+        - {"format": "image/png","minZoom": 0,"maxZoom": 21,"detectRetina": false}
