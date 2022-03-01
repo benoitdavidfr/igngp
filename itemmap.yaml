@@ -1,0 +1,42 @@
+title: carte Leaflet affichant un objet pour ftsmap
+$schema: llmap
+head:
+  title: "<?php echo $title;?>"
+  plugIns:
+    - {$ref: llmap.yaml#/plugIns/Control.Coordinates/include}
+    - {$ref: llmap.yaml#/plugIns/edgebuffer/include}
+    - {$ref: llmap.yaml#/plugIns/leaflet-ajax/include}
+    - {$ref: llmap.yaml#/plugIns/uGeoJSON/include}
+body:
+  jsFunctions: |
+    // affichage des caractéristiques de chaque feature
+    var onEachFeature = function (feature, layer) {
+      var popupContent = '<pre><u><i>id</i></u>: '+feature.id+"\\n";
+      popupContent += '<u><i>'+'properties</i></u>: '+JSON.stringify(feature.properties)+"\\n";
+      popupContent += '</ul>';
+      layer.bindPopup(popupContent);
+      layer.bindTooltip(feature.id);
+    }
+  view:
+    latLon: <?php echo $center;?>
+    zoom: <?php echo $zoom;?>
+  plugInActivation:
+    - {$ref: llmap.yaml#/plugIns/Control.Coordinates/activation}
+  baseLayers:
+    Plan IGN:
+      {$ref: llmap.yaml#/layers/plan-ignv2}
+    OSM:
+      {$ref: llmap.yaml#/layers/OSM}
+    Fond blanc:
+      {$ref: llmap.yaml#/layers/fondBlanc}
+  defaultBaseLayer: Plan IGN
+  overlays:
+    item:
+      type: L.GeoJSON.AJAX
+      params:
+        - '<?php echo $itemUrl;?>'
+        - {style: { color: 'blue'}, minZoom: 0, maxZoom: 18, onEachFeature: {$function: onEachFeature}}
+    debug:
+      {$ref: llmap.yaml#/layers/debug}
+  addLayers:
+    - item

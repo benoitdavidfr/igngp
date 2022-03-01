@@ -38,8 +38,15 @@ submodules:
   - /geoapi/igngp/api
 phpScripts:
   - /geoapi/igngp/tile.php
-  - /geoapi/igngp/genmap.php
+  - /geoapi/igngp/tilemap.php
+  - /geoapi/igngp/fts.php
 phpIncludes:
+  - /geoapi/igngp/llmap.inc.php
 htmlPages:
   - /geoapi/igngp/config.yaml
   - /geoapi/igngp/index.html
+  - /geoapi/igngp/llmap.yaml
+  - /geoapi/igngp/llmap.schema.yaml
+  - /geoapi/igngp/tilemap.yaml
+  - /geoapi/igngp/lyrmap.yaml
+  - /geoapi/igngp/itemmap.yaml

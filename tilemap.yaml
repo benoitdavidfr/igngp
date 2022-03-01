@@ -1,0 +1,15 @@
+title: carte Leaflet affichant les couches pour tilemap.php
+$schema: llmap
+head:
+  title: igngp/tiles
+  plugIns:
+    - {$ref: llmap.yaml#/plugIns/Control.Coordinates/include}
+    - {$ref: llmap.yaml#/plugIns/edgebuffer/include}
+body:
+  view:
+    {$ref: llmap.yaml#/views/metropole}
+  plugInActivation:
+    - {$ref: llmap.yaml#/plugIns/Control.Coordinates/activation}
+  baseLayers:
+  defaultBaseLayer:
+  overlays:
