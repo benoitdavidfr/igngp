@@ -5,16 +5,8 @@ head:
   plugIns:
     - {$ref: llmap.yaml#/plugIns/Control.Coordinates/include}
     - {$ref: llmap.yaml#/plugIns/edgebuffer/include}
-    - |
-      <!-- Include the Control.Coordinates plugin -->
-      <link rel='stylesheet' href='https://geoapi.fr/shomgt/leaflet/Control.Coordinates.css'>
-      <script src='https://geoapi.fr/shomgt/leaflet/Control.Coordinates.js'></script>
-    - |
-      <!-- Include the uGeoJSON plugin -->
-      <script src="https://geoapi.fr/shomgt/leaflet/leaflet.uGeoJSON.js"></script>
-    - |
-      <!-- plug-in d'appel des GeoJSON en AJAX -->
-      <script src='https://geoapi.fr/shomgt/leaflet/leaflet-ajax.js'></script>
+    - {$ref: llmap.yaml#/plugIns/leaflet-ajax/include}
+    - {$ref: llmap.yaml#/plugIns/uGeoJSON/include}
 body:
   jsFunctions: |
     // affichage des caractéristiques de chaque feature
@@ -32,27 +24,11 @@ body:
     - {$ref: llmap.yaml#/plugIns/Control.Coordinates/activation}
   baseLayers:
     Plan IGN:
-      type: L.TileLayer
-      params:
-        - 'https://igngp.geoapi.fr/tile.php/plan-ignv2/{z}/{x}/{y}.png'
-        - format: image/png
-          minZoom: 0
-          maxZoom: 18
-          detectRetina: false
-          attribution: "&copy; <a href='http://www.ign.fr' target='_blank'>IGN</a>"
+      {$ref: llmap.yaml#/layers/plan-ignv2}
     OSM:
-      type: L.TileLayer
-      params:
-        - 'http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-        - attribution: "&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'>les contributeurs d’OpenStreetMap</a>"
+      {$ref: llmap.yaml#/layers/OSM}
     Fond blanc:
-      type: L.TileLayer
-      params:
-        - 'https://visu.gexplor.fr/utilityserver.php/whiteimg/{z}/{x}/{y}.jpg'
-        - format: 'image/jpeg'
-          minZoom: 0
-          maxZoom: 21
-          detectRetina: false
+      {$ref: llmap.yaml#/layers/fondBlanc}
   defaultBaseLayer: Plan IGN
   overlays:
     "<?php echo $collId;?>":
@@ -69,7 +45,4 @@ body:
           usebbox: true
           onEachFeature: {$function: onEachFeature}
     debug:
-      type: L.TileLayer
-      params:
-        - 'http://visu.gexplor.fr/utilityserver.php/debug/{z}/{x}/{y}.png'
-        - {"format": "image/png","minZoom": 0,"maxZoom": 21,"detectRetina": false}
+      {$ref: llmap.yaml#/layers/debug}

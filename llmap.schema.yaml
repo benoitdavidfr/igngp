@@ -29,6 +29,7 @@ definitions:
     description: description d'une couche
     type: object
     additionalProperties: false
+    required: [type, params]
     properties:
       title:
         description: nom de la couche dans la carte
@@ -53,8 +54,11 @@ definitions:
     additionalProperties: false
     patternProperties:
       ^[-a-zA-Z0-9 _+<>?;$]+$:
-        description: définition de la couche
-        $ref: '#/definitions/layer'
+        oneOf:
+          - description: définition de la couche
+            $ref: '#/definitions/layer'
+          - description: référence JSOn vers la définition de la couche
+            $ref: '#/definitions/jsonRef'
 type: object
 additionalProperties: false
 properties:

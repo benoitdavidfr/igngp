@@ -12,7 +12,7 @@ require_once __DIR__.'/vendor/autoload.php';
 use Symfony\Component\Yaml\Yaml;
 
 class JsonRef {
-  static function deref(array $ref, array $val): string {
+  static function deref(array $ref, array $val): array|string {
     //echo $ref['$ref'];
     $ref = $ref['$ref'];
     $pos = strpos($ref, '#');
@@ -31,7 +31,7 @@ class JsonRef {
 };
 
 class LLMap {
-  static $constants;
+  static $constants; // le fichier llmap.yaml avec les éléments bien connus
   
   // fonction récursive replacant les dans les chaines les variables Php par leur valeur
   static function replacePhpVars(string|array $srce, array $vars): string|array {
@@ -109,6 +109,9 @@ class LLMap {
   }
   
   private static function layer(string $lyrid, array $layer, array $vars): void {
+    if (isset($layer['$ref'])) {
+      $layer = JsonRef::deref($layer, self::$constants);
+    }
     $lyrid = self::replacePhpVars($lyrid, $vars);
     echo "  '$lyrid': new $layer[type](\n";
     self::layerParams($layer['params'], $vars);
