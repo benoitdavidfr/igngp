@@ -4,6 +4,8 @@ title: ftsmap.php - affichage d'une carte d'un objet ou d'une collection issu de
 name: ftsmap.php
 doc: |
 journal: |
+  1/3/2022:
+    - adaptation pour pouvoir fonctionner soit en mode http soit en mode Php
   28/2/2022:
     - création
 */
@@ -13,14 +15,22 @@ require_once __DIR__.'/vendor/autoload.php';
 require_once __DIR__.'/../../geovect/gegeom/gebox.inc.php';
 require_once __DIR__.'/../../geovect/gegeom/zoom.inc.php';
 require_once __DIR__.'/config.inc.php';
+require_once __DIR__.'/llmap.inc.php';
 
 use Symfony\Component\Yaml\Yaml;
 
+//define('MODE', 'http'); // requête du service par appel d'une URL hhtp
+define('MODE', 'Php'); // requête du service au travers de la classe FeatureServer
+//define('MODE', 'test'); // requête du service lu dans un fichier exemple
+
+// l'URL de base pour les appels en mode http et pour les couches dans les cartes
 $baseFtsUrl = (($_SERVER['HTTP_HOST']=='localhost')? 'http://localhost/geoapi/igngp' : 'https://igngp.geoapi.fr') . '/fts.php';
 
-//echo '<pre>$_SERVER='; print_r($_SERVER); echo "</pre>\n";
+if (MODE == 'Php') { // En mode Php, Utilisation de la classe FeatureServer
+  require_once __DIR__.'/../../geovect/features/ftrserver.inc.php';
+}
 
-if (in_array($_SERVER['PATH_INFO'] ?? null, [null, '/'])) {
+if (in_array($_SERVER['PATH_INFO'] ?? null, [null, '/'])) { // appel initial /
   foreach (config()['themes'] as $thid => $theme) {
     echo "<a href='$_SERVER[SCRIPT_NAME]/$thid'>$theme[title]</a><br>\n";
   }
@@ -29,9 +39,15 @@ if (in_array($_SERVER['PATH_INFO'] ?? null, [null, '/'])) {
 
 if (preg_match('!^/([^/]+)$!', $_SERVER['PATH_INFO'], $matches)) { // /{theme}
   $thid = $matches[1];
-  $colls = file_get_contents("$baseFtsUrl/$thid/collections");
-  //echo "<pre>$colls";
-  $colls = json_decode($colls, true);
+  if (MODE == 'http') { // requête du service par appel d'une URL hhtp
+    $colls = file_get_contents("$baseFtsUrl/$thid/collections");
+    //echo "<pre>$colls";
+    $colls = json_decode($colls, true);
+  }
+  else { // requête du service au travers de la classe FeatureServer
+    $ftrserver = FeatureServer::new('wfs', "/wxs.ign.fr/$thid/geoportail/wfs", '', null);
+    $colls = $ftrserver->collections('');
+  }
   $colls = $colls['collections'];
   //echo '<pre>colls='; print_r($colls);
   foreach ($colls as $coll) {
@@ -46,20 +62,30 @@ if (preg_match('!^/([^/]+)/([^/]+)$!', $_SERVER['PATH_INFO'], $matches)) { // /{
   $startindex = $_GET['startindex'] ?? 0;
   $limit = $_GET['limit'] ?? 10;
   $properties = $_GET['properties'] ?? null;
-  $params = '';
-  foreach ($_GET as $k=>$v) {
-    if ($v !== '')
-      $params .= ($params?'&':'')."$k=$v";
-  }
-  $path = "$baseFtsUrl/$thid/collections/$collId/items?$params";
   //echo "path=$path<br>\n";
-  if (1) {
+  if (MODE == 'http') { // requête du service par appel d'une URL hhtp
+    $params = '';
+    foreach ($_GET as $k=>$v) {
+      if ($v !== '')
+        $params .= ($params?'&':'')."$k=".urlencode($v);
+    }
+    $path = "$baseFtsUrl/$thid/collections/$collId/items?$params";
     $items = file_get_contents($path);
+    $items = json_decode($items, true);
   }
-  else {
+  elseif (MODE == 'Php') { // requête du service au travers de la classe FeatureServer
+    $filters = [];
+    foreach ($_GET as $k=>$v) {
+      if (!in_array($k, ['f','properties','limit','startindex']) && ($v != ''))
+        $filters[$k] = $v;
+    }
+    $ftrserver = FeatureServer::new('wfs', "/wxs.ign.fr/$thid/geoportail/wfs", '', null);
+    $items = $ftrserver->items('', $collId, [], $filters, $properties ? explode(',', $properties) : [], $limit, $startindex);
+  }
+  else { // Test
     $items = file_get_contents(__DIR__.'/items-eg.json');
+    $items = json_decode($items, true);
   }
-  $items = json_decode($items, true);
   //echo '<pre>',Yaml::dump($items),"</pre>\n";
   $properties = $items['features'] ? array_keys($items['features'][0]['properties']) : [];
   // formulaire de modification des paramètres
@@ -90,7 +116,7 @@ if (preg_match('!^/([^/]+)/([^/]+)$!', $_SERVER['PATH_INFO'], $matches)) { // /{
   die();
 }
 
-if (preg_match('!^/([^/]+)/([^/]+)/map$!', $_SERVER['PATH_INFO'], $matches)) { // /{theme}/{collId}/map
+if (preg_match('!^xx/([^/]+)/([^/]+)/map$!', $_SERVER['PATH_INFO'], $matches)) { // /{theme}/{collId}/map
   $thid = $matches[1];
   $collId = $matches[2];
   $startindex = $_GET['startindex'] ?? 0;
@@ -181,6 +207,20 @@ L.control.layers(baseLayers, overlays).addTo(map);
   </body>
 </html>
 EOT;
+  die();
+}
+
+if (preg_match('!^/([^/]+)/([^/]+)/map$!', $_SERVER['PATH_INFO'], $matches)) { // /{theme}/{collId}/map
+  $thid = $matches[1];
+  $collId = $matches[2];
+  $startindex = $_GET['startindex'] ?? 0;
+  $llmap = new LLMap(__DIR__.'/lyrmap.yaml');
+  $llmap->show([
+    'title'=> "carte $_SERVER[PATH_INFO]",
+    'collId'=> $collId,
+    'collUrl'=> "$baseFtsUrl/$thid/collections/$collId/items?startindex=$startindex",
+    'collUrl0'=> "$baseFtsUrl/$thid/collections/$collId/items",
+  ]);
   die();
 }
 

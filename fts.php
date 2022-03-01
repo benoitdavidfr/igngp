@@ -12,15 +12,11 @@ journal: |
   18/2/2022:
     - création
 includes:
-  - ../../geovect/features/fts.php
+  - ../../geovect/features/fts.inc.php
   - config.inc.php
-  //- ../../phplib/sqlschema.inc.php
 */
 require_once __DIR__.'/vendor/autoload.php';
-//require_once __DIR__.'/../../phplib/sqlschema.inc.php';
-require_once __DIR__.'/../../geovect/features/fts.php';
-//require_once __DIR__.'/../../geovect/features/ftrserver.inc.php';
-//require_once __DIR__.'/../../geovect/features/doc.php';
+require_once __DIR__.'/../../geovect/features/fts.inc.php';
 require_once __DIR__.'/config.inc.php';
 
 use Symfony\Component\Yaml\Yaml;
