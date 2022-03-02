@@ -107,7 +107,7 @@ if (preg_match('!^/([^/]+)/([^/]+)$!', $_SERVER['PATH_INFO'], $matches)) { // /{
   }
   echo "</table>\n";
   $next = $startindex+$limit;
-  echo "<a href='$_SERVER[SCRIPT_NAME]/$thid/$collId/map?startindex=$startindex'>map</a><br>\n";
+  echo "<a href='$_SERVER[SCRIPT_NAME]/$thid/$collId/map?startindex=$startindex&limit=$limit'>map</a><br>\n";
   echo "<a href='$_SERVER[SCRIPT_NAME]/$thid/$collId?startindex=$next";
   foreach ($_GET as $k => $v)
     if (($k <> 'startindex') && ($v <> ''))
@@ -120,13 +120,14 @@ if (preg_match('!^/([^/]+)/([^/]+)/map$!', $_SERVER['PATH_INFO'], $matches)) { /
   $thid = $matches[1];
   $collId = $matches[2];
   $startindex = $_GET['startindex'] ?? 0;
+  $limit = $_GET['limit'] ?? 10;
   LLMap::genPhp(
     __DIR__.'/lyrmap.yaml',
     [
       'title'=> "carte $_SERVER[PATH_INFO]",
       'collId'=> $collId,
-      'collUrl'=> "$baseFtsUrl/$thid/collections/$collId/items?startindex=$startindex",
-      'collUrl0'=> "$baseFtsUrl/$thid/collections/$collId/items",
+      'collUrl'=> "$baseFtsUrl/$thid/collections/$collId/items?startindex=$startindex&limit=$limit",
+      'collUrl0'=> "$baseFtsUrl/$thid/collections/$collId/items?startindex=0&limit=$limit",
     ]
   );
   die();
