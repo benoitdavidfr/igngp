@@ -132,7 +132,7 @@ class LLMap {
       $layer = JsonRef::deref($layer, self::$wk);
     }
     $lyrid = self::replacePhpVars($lyrid, $vars);
-    echo "  '$lyrid': new $layer[type](\n";
+    echo "  \"$lyrid\": new $layer[type](\n";
     self::layerParams($layer['params'], $vars);
     echo "  ),\n";
   }
@@ -152,7 +152,7 @@ class LLMap {
     foreach ($body['baseLayers'] as $lyrid => $layer)
       self::layer($lyrid, $layer, $vars);
     echo "};\n";
-    echo "map.addLayer(baseLayers['$body[defaultBaseLayer]']);\n\n";
+    echo "map.addLayer(baseLayers[\"$body[defaultBaseLayer]\"]);\n\n";
     echo "var overlays = {\n";
     foreach ($body['overlays'] as $lyrid => $layer)
       self::layer($lyrid, $layer, $vars);
