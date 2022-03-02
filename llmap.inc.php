@@ -119,7 +119,8 @@ class LLMap {
         echo "    '$param'";
       }
       elseif (is_array($param)) {
-        $json = json_encode(self::replacePhpVars($param, $vars), JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
+        //$json = json_encode(self::replacePhpVars($param, $vars), JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
+        $json = json_encode($param, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
         $json = preg_replace('!{"\$function":"([^"]+)"}!', '$1', $json);
         echo "    ",$json;
       }

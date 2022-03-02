@@ -41,7 +41,7 @@ foreach ($_GET as $k => $v) {
           'format'=> ($layer['format']=='png' ? 'image/png' : 'image/jpeg'),
           'minZoom'=> $layer['minZoom'],
           'maxZoom'=> $layer['maxZoom'],
-          'detectRetina'=> isset($layer['detectRetina']) ? 'false' : 'true',
+          'detectRetina'=> !isset($layer['detectRetina']),
           'attribution'=> $layer['attribution'] ?? "&copy; <a href='http://www.ign.fr'>IGN</a>",
         ],
       ]
