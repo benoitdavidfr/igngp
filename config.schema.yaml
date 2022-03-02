@@ -116,16 +116,55 @@ definitions:
         description: lien http éventuel vers une doc complémentaire
         type: string
       conformsTo:
+        description: URI vers la spécification du jeu de données
+        type: string
+        format: uri
+  layer:
+    description: définition d'une couche de tuiles
+    type: object
+    required: [title, server, gpname, format]
+    properties:
+      title:
+        description: titre de la couche
+        type: string
+      abstract:
+        description: texte de résumé de la couche
+        type: string
+      doc:
+        description: URL d'infos complémentaires
+        type: string
+      server:
+        description: identifiant du serveur contenant la couche
+        type: string
+      gpname:
+        description: nom de la couche dans le Géoportail
+        type: string
+      style:
+        description: style à utiliser si <> normal
+        type: string
+      gpkey:
+        description: clé générique spécifique à la couche si existe
+        type: string
+      format:
+        description: format des imagettes
+        type: string
+        enum: [png, jpg]
+      minZoom:
+        description: zoom minimum
+        type: integer
+      maxZoom:
+        description: zoom maximum
+        type: integer
+      attribution:
+        description: informations sur la propriété intellectuelle sauf si IGN, utilisable par Leaflet
+        type: string
+      detectRetina:
         description: |
-          pointeur JSON vers la spécification du jeu de données défini dans le dictionnaire specifications
-          soit du même document soit d'un autre document
-        type: object
-        additionalProperties: false
-        required: [$ref]
-        properties:
-          $ref:
-            type: string
-      
+          si présent et false alors instruction pour Leaflet de positionner le champ detectRetina à false
+          pour cette couche
+        type: boolean
+        enum: [false]
+  
 type: object
 properties:
   title:
@@ -207,48 +246,6 @@ properties:
     patternProperties:
       ^[-a-zA-Z0-9_+]+$:
         description: définition d'une couche de tuiles
-        type: object
-        required: [title, server, gpname, format]
-        properties:
-          title:
-            description: titre de la couche
-            type: string
-          abstract:
-            description: texte de résumé de la couche
-            type: string
-          doc:
-            description: URL d'infos complémentaires
-            type: string
-          server:
-            description: identifiant du serveur contenant la couche
-            type: string
-          gpname:
-            description: nom de la couche dans le Géoportail
-            type: string
-          style:
-            description: style à utiliser si <> normal
-            type: string
-          gpkey:
-            description: clé générique spécifique à la couche si existe
-            type: string
-          format:
-            description: format des imagettes
-            type: string
-            enum: [png, jpg]
-          minZoom:
-            description: zoom minimum
-            type: integer
-          maxZoom:
-            description: zoom maximum
-            type: integer
-          attribution:
-            description: informations sur la propriété intellectuelle sauf si IGN, utilisable par Leaflet
-            type: string
-          detectRetina:
-            description: |
-              si présent et false alors instruction pour Leaflet de positionner le champ detectRetina à false
-              pour cette couche
-            type: boolean
-            enum: [false]
+        $ref: '#/definitions/layer'
   eof:
     type: 'null'

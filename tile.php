@@ -118,8 +118,8 @@ EOT;
     echo Yaml::dump(self::config()['layers'][$lyrname]),"\n";
     
     echo "</pre><h3>Schéma JSON utilisé</h3><pre>\n";
-    $ayersSchema = self::config()['$schema']['properties']['layers']['patternProperties'];
-    echo Yaml::dump(array_values($ayersSchema)[0], 3, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
+    $layersSchema = Yaml::parseFile(__DIR__.'/config.schema.yaml')['definitions']['layer'];
+    echo Yaml::dump($layersSchema, 3, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
   }
   
   static function layerDocJson(string $lyrname): string {
